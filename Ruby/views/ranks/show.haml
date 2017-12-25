@@ -1,0 +1,152 @@
+- content_for :title, 'Admin - Ranks - Editing ' + @rank.name
+
+%section.section-dark.main-header
+  .container-fluid
+    %h1
+      Editing:
+      = @rank.name
+      .pull-right
+        = link_to 'Back', admin_ranks_path, class: 'btn btn-info'
+        = link_to 'Copy', admin_rank_copy_path(@rank), class: 'btn btn-primary'
+        = link_to 'Delete Rank', [:admin, @rank], class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+%section
+  .container-fluid
+    - if !@rank.perms_only?
+      %h2{:style => 'text-align: center'} Member Actions
+      .row-fluid
+        - if @rank.can_execute?(current_user, :members, :add)
+          .span3
+            %h3 Add Member
+            = form_tag admin_rank_members_new_path(@rank) do
+              = text_field_tag 'user', nil, :class => 'typeahead', :autocomplete => 'off'
+              %br
+              = submit_tag 'Add Member', :class => 'btn btn-primary'
+        .span8
+          %h3
+            Members
+            %small Note that if an X is not shown, then the rank was purchased.
+          - @rank.memberships.each do |ms|
+            - m = User.where(id: ms.member_id).first
+            - next if m.nil?
+            .row-fluid
+              .span3
+                - unless ms.is_purchased || !@rank.can_execute?(current_user, :members, :remove)
+                  %a{:href => admin_rank_member_url(@rank, m), :method => :delete}
+                    %i.fa.fa-times
+                = m.username
+                - if ms.is_timed?
+                  %small
+                    Expires:
+                    = ms.expires_at
+              - if @rank.can_execute?(current_user, :members, :update_role)
+                .span8
+                  .form-inline
+                    = form_for ms, url: admin_rank_members_path(@rank) + "/#{ms.id}" do |f|
+                      = f.text_field :role
+                      = f.submit 'Update Role', :class => 'btn btn-primary'
+            %br
+
+      %hr
+      %h2{:style => 'text-align: center'} Rank Settings
+      = form_for @rank, :url => admin_rank_path do |f|
+        = render 'admin/ranks/misc', :f => f
+      %hr
+    - else
+      .alert#alert-info
+        %strong This rank only has permissions options since this rank is server side (prefixed with an @).
+    %h2{:style => 'text-align: center'} Permissions
+    %ul.nav.nav-pills{:role => 'tablist'}
+      - if @editable.include?(:web_perms)
+        %li.dropdown.active{:role => 'presentation'}
+          %a#web.dropdown-toggle{'aria-controls' => 'web-contents', 'aria-expanded' => 'false', 'data-toggle' => 'dropdown', :href => '#'}
+            Website
+            %span.caret
+          %ul#web-contents.dropdown-menu{'aria-labelledby' => 'web'}
+            %li.active
+              %a#api-tab{'aria-controls' => 'misc', 'data-toggle' => 'tab', :href => '#api', :role => 'tab'} API
+            %li
+              %a#forums-tab{'aria-controls' => 'forums', 'data-toggle' => 'tab', :href => '#forums', :role => 'tab'} Forums
+            %li
+              %a#ranks-tab{'aria-controls' => 'ranks', 'data-toggle' => 'tab', :href => '#ranks', :role => 'tab'} Ranks
+            %li
+              %a#misc-tab{'aria-controls' => 'misc', 'data-toggle' => 'tab', :href => '#misc', :role => 'tab'} Miscellaneous
+        - if @editable.include?(:mc_perms)
+          %li.dropdown{:role => 'presentation'}
+            %a#ig.dropdown-toggle{'aria-controls' => 'web-contents', 'aria-expanded' => 'false', 'data-toggle' => 'dropdown', :href => '#'}
+              In Game
+              %span.caret
+            %ul#ig-contents.dropdown-menu{'aria-labelledby' => 'web'}
+              %li
+                %a#ig-global-tab{'aria-controls' => 'ig-global', 'data-toggle' => 'tab', :href => '#ig-global', :role => 'tab'} Global
+              %li
+                %a#ig-special-tab{'aria-controls' => 'ig-special', 'data-toggle' => 'tab', :href => '#ig-special', :role => 'tab'} Special Permissions
+        - if @editable.include?(:ts_perms)
+          %li
+            %a#ts-tab{'aria-controls' => 'ts', 'data-toggle' => 'tab', :href => '#ts', :role => 'tab'} TS Permissions
+
+    = form_for @rank, :url => admin_rank_path do |f|
+      .tab-content
+        - if @editable.include?(:mc_perms)
+          .tab-pane{:id => 'ig-global', :role => 'tabpanel'}
+            %h3{:style => 'text-align: center'}
+              In Game Permissions (Network Wide)
+              %small One permission per line.
+              = f.submit 'Update In Game Permissions', :class => 'btn btn-primary'
+            .row-fluid
+              = f.text_area :mc_perms, :style => 'width: 560px; height: 366px;'
+          .tab-pane{:id => 'ig-special', :role => 'tabpanel'}
+            %h3{:style => 'text-align: center'}
+              In Game Permissions (For specific server categories)
+              %small One permission per line, you can negate from global with a '-'.
+              = f.submit 'Update In Game Permissions', :class => 'btn btn-primary'
+            .row-fluid
+              = render 'admin/ranks/permparts/ig_special'
+        - if @editable.include?(:ts_perms)
+          .tab-pane{:id => 'ts', :role => 'tabpanel'}
+            %h3{:style => 'text-align: center'}
+              TeamSpeak Bot Permissions
+              %small One permission per line. This is only for bot commands, normal TS perms are still managed in the application.
+              = f.submit 'Update TS Permissions', :class => 'btn btn-primary'
+            .row-fluid
+              = f.text_area :ts_perms, :style => 'width: 560px; height: 366px;'
+        - if @editable.include?(:web_perms)
+          .tab-pane.active{:id => 'api', :role => 'tabpanel'}
+            .alert.alert-info.no-margin{:style => 'margin: 0'} Each dropdown menu tab is a separate forum, and must be updated individually.
+            %br
+            %h3{:style => 'text-align: center'}
+              API Permissions
+              %small Permissions related to the API.
+              = f.submit 'Update Web Permissions', :class => 'btn btn-primary'
+            .row-fluid
+              = render 'admin/ranks/permparts/api'
+          .tab-pane{:id => 'forums', :role => 'tabpanel'}
+            .alert.alert-info.no-margin{:style => 'margin: 0'} Each dropdown menu tab is a separate forum, and must be updated individually.
+            %br
+            %h3{:style => 'text-align: center'}
+              Forum Permissions
+              %small Permissions related to the management of forums.
+              = f.submit 'Update Web Permissions', :class => 'btn btn-primary'
+            .row-fluid
+              = render 'admin/ranks/permparts/categories'
+          .tab-pane{:id => 'ranks', :role => 'tabpanel'}
+            .alert.alert-info.no-margin{:style => 'margin: 0'} Each dropdown menu tab is a separate forum, and must be updated individually.
+            %br
+            %h3{:style => 'text-align: center'}
+              Rank Permissions
+              %small Permissions related to the management of rnaks.
+              = f.submit 'Update Web Permissions', :class => 'btn btn-primary'
+            .row-fluid
+              = render 'admin/ranks/permparts/ranks'
+          .tab-pane{:id => 'misc', :role => 'tabpanel'}
+            .alert.alert-info.no-margin{:style => 'margin: 0'} Each dropdown menu tab is a separate forum, and must be updated individually.
+            %br
+            %h3{:style => 'text-align: center'}
+              Miscellaneous Permissions
+              %small Permissions related to the management of any other objects on the site.
+              = f.submit 'Update Web Permissions', :class => 'btn btn-primary'
+            .row-fluid
+              = render 'admin/ranks/permparts/misc'
+
+%br

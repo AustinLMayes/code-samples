@@ -1,0 +1,35 @@
+- content_for :title, 'Scrimmage Servers'
+
+
+%section.section-dark.main-header
+  .container-fluid
+    .row-fluid
+      .span12
+        %h1 Reserve a Server
+        %p Reserve a scrimmage server for your team to practice and prepare for tournaments.
+
+%section.section-padded.post
+  .container-fluid
+    .row-fluid
+      .span6
+
+        This reservation for
+        %b
+          =raw current_user.team.link
+        will run from
+        %b= @slot.start_at.in_time_zone(Time.zone).strftime('%l:%M %p')
+        to
+        %b= @slot.end_at.in_time_zone(Time.zone).strftime('%l:%M %p')
+        on
+        %b= @slot.start_at.in_time_zone(Time.zone).strftime('%B %e, %Y') + '.'
+        %hr
+        %b The following members will be invited and notified to play:
+        - current_user.team.members.each do |member|
+          = current_user.team.members.last == member ? link_to_user(member.user) : link_to_user(member.user) + ', '
+
+    %br
+
+    = form_tag('/scrims/create', :method => 'posts') do
+      = hidden_field_tag :slot, @slot.id
+      = submit_tag 'Create Reservation', :class => 'btn btn-primary'
+      %a.btn{:href => '/scrims'} Back

@@ -1,0 +1,40 @@
+= content_for :title, 'Rank Management'
+
+= render 'admin/heads/index', subject: 'Rank'
+
+%section.section-padded
+  .container-fluid
+    .table-responsive
+      %table.table.table-striped.table-bordered
+        %thead
+          %tr
+            %th{:style => 'width: 80px'} Perms Only
+            %th Name
+            %th{:style => 'width: 50px'} Priority
+            %th{:style => 'width: 30px'} Staff
+            %th{:style => 'width: 150px'} Permanent Members
+            %th{:style => 'width: 110px'} Timed Members
+            %th
+        %tbody
+          - @ranks.each do |rank|
+            - next unless (rank.can_execute?(current_user, :rank, :update) || rank.can_execute?(current_user, :rank, :destroy))
+            %tr
+              %td
+                = boolean_to_symbol(rank.perms_only?, true)
+              %td{:style => "color: #{rank.html_color}" }
+                = rank.name
+              %td
+                = rank.priority
+              %td
+                = boolean_to_symbol(rank.is_staff, true)
+              %td
+                = rank.members.size
+              %td
+                = rank.timed_members.size
+              %td
+                - if rank.can_execute?(current_user, :rank, :update)
+                  = link_to 'Edit', admin_rank_path(rank), :class => 'btn btn-mini btn-info'
+                - if rank.can_execute?(current_user, :rank, :create)
+                  = link_to 'Copy', admin_rank_copy_path(rank), class: 'btn btn-mini btn-primary'
+                - if rank.can_execute?(current_user, :rank, :destroy)
+                  = link_to 'Delete', [:admin, rank], method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'

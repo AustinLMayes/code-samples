@@ -1,0 +1,19 @@
+- if @fullWeek
+  .alert.alert-danger
+    You have reached your maximum allowance of reservations per week. Please wait to the start of next week or visit the shop to purchase a rank.
+- if @date.nil?
+  Please specify a valid date.
+- else
+  - if @donate
+    .alert.alert-danger
+      There are no more servers available for reservation at the selected time! Currently you only have access to
+      %strong= @max
+      = "#{pluralize('server', @max)}."
+      You can donate
+      %a{href: 'https://shop.avicus.net'} at the shop
+      to unlock more servers.
+  - else
+    .alert{class: @possible > 0 ? 'alert-success' : 'alert-danger'}
+      There
+      = @possible == 1 ? "is #{@possible} server" : "are #{@possible} servers"
+      available for reservation at the given time!

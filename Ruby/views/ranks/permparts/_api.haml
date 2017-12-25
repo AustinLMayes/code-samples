@@ -1,0 +1,14 @@
+- members = @api_gen.parent_group.members
+- members.sort! { |a,b| a.text.downcase <=> b.text.downcase }
+.span2
+  %ul.nav.nav-pills.nav-stacked{:role => 'tablist'}
+    %li{:role => 'presentation'}
+    - members.each do |api_class|
+      - next unless api_class.is_a?(PermissionGroup)
+      %li{:role => 'presentation'}
+        %a{'aria-controls' => "#{api_class.ident.to_s}", 'data-toggle' => 'tab', :href => "##{api_class.ident.to_s}", :role => 'tab'}=api_class.text
+.tab-content
+  - members.each do |api_class|
+    - next unless api_class.is_a?(PermissionGroup)
+    .tab-pane{:id => "#{api_class.ident.to_s}", :role => 'tabpanel'}
+      = perm_group(api_class)

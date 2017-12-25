@@ -1,0 +1,16 @@
+.span3
+  - if text == desc
+    = titleize(text)
+  - else
+    %p{:rel => 'tooltip', :title => desc}
+      = titleize(text)
+  - selection = @rank.get_permission_raw(path)
+  - selection = default if selection.nil?
+  - if options.include?(:USER_VALUE)
+    %input{:name => "rank[web_perms]#{string_path}", :style => 'width: 150px', :type => 'text', :value => "#{selection}"}
+  - else
+    %select{:name => "rank[web_perms]#{string_path}"}
+      - options.each do |opt|
+        - text = determine_text(opt)
+        %option{:value => opt, :selected => (selection.to_s == opt.to_s ? '' : nil)}
+          = titleize(text)

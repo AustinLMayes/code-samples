@@ -1,0 +1,110 @@
+- content_for :title, 'Scrimmage Reservation'
+
+
+%section.section-dark.main-header
+  .container-fluid
+    .row-fluid
+      .span6
+        %h1 Scrimmage Reservation
+        %p Details regarding a reservation for a scrimmage server.
+      .span6
+        %br
+        - if Time.now < @reservation.start_at && logged_in? && (current_user.team != nil)
+          = link_to 'Cancel Reservation', "/scrims/#{@reservation.id}/cancel", :class => 'btn btn-danger pull-right', :confirm => 'Are you sure you want to cancel this reservation?'
+
+%section.post
+  %br
+  .container-fluid
+    .row-fluid
+      .span12
+        - if @reservation.ongoing?
+          .alert.alert-success
+            The server is now accessible! If you are on the team
+            %b= @reservation.team.title
+            or have been invited, connect to the Avicus Network server and type
+            %b= "\"/server #{@reservation.server}\""
+            to join!
+        - if Time.now > @reservation.end_at
+          .alert.alert-warning
+            This server reservation has ended.
+        - if Time.now < @reservation.start_at
+          .alert.alert-info
+            This scrimmage server will be accessible to join in
+            = time_ago(@reservation.start_at) + '.'
+    .row-fluid
+      .span6
+
+        This reservation for
+        %b
+          =raw @reservation.team.link
+        will run from
+        %b= @reservation.start_at.in_time_zone(Time.zone).strftime('%l:%M %p')
+        to
+        %b= @reservation.end_at.in_time_zone(Time.zone).strftime('%l:%M %p')
+        on
+        %b= @reservation.start_at.in_time_zone(Time.zone).strftime('%B %e, %Y') + '.'
+        %hr
+        %b The following members have been invited to play:
+        - @reservation.team.members.each do |member|
+          = @reservation.team.members.last == member ? link_to_user(member.user) : link_to_user(member.user) + ', '
+    %br
+
+%section.section-dark.main-header
+  .container-fluid
+    .row-fluid
+      .span12
+        %h1 Server Administration
+        %p
+          Learn how to operate a scrimmage server below.
+
+%section.section-padded
+  .container-fluid
+    .row-fluid
+      .span12
+        %p
+          %b How do I access the server?
+        %blockquote
+          This reservation is for the server
+          %b= @reservation.server
+          which is accessible by logging into the Avicus Network servers (avic.us) and typing
+          %code= '/sv ' + @reservation.server
+          when your reservation is active.
+        %p
+        %p
+          %b How do I setup a match?
+        %blockquote
+          Leaders of a team with a reservation are given access to various commands that allow configuration of matches. To start a match, simply type
+          %code /start [time]
+          \. To end a match use the command
+          %code /end
+          and to quickly cycle to the next match after one has ended, type
+          %code /cycle [time]
+          You can force a winner by adding
+          %code -w teamname
+          or the team with the most objectives with
+          %code -o
+          \. You can set what map the next match will play on with the command
+          %code /setnext &lt;map name&gt;
+          where <Map Name> indicates the name of the world of a map (eg. Castle Adventure = CastleAdventure). The names of map worlds can be found at
+          %a{:href => 'https://maps.avicus.net'} maps.avicus.net
+          \. You can configure teams and other settings via the command
+          %code /group
+          \.
+        %p
+        %p
+          %b My scrimmage server isn't working!
+        %blockquote
+          Report any bugs that you find with the system at the
+          %a{:href => '/issues'} issue tracker
+          and we'll do our best to respond to them.
+        %p
+        %p
+          %b How do I invite more players or teams?
+        %blockquote
+          Invite individual players with the command
+          %code /scrim invite -p &lt;player&gt;
+          and invite a team by entering
+          %code /scrim invite &lt;team name&gt;
+          \. Note that the only players that can use this command are team leaders.
+        %p
+        %p

@@ -1,0 +1,32 @@
+.row-fluid
+  .span4
+    %h4 Miscellaneous
+    %p Name
+    = f.text_field :name, :disabled => @editable.include?(:name) ? nil : ''
+    %p Inheritance
+    %select{name: 'rank[inheritance_id]', :disabled => @editable.include?(:inheritance) ? nil : ''}
+      %option{:value => '', :selected => (@rank.inheritance.nil? ? '' : nil)}
+        \- No Inheritance -
+      - Rank.all.order('priority DESC').each do |r|
+        - next if r == @rank
+        %option{:value => r.id, :selected => (@rank.inheritance_id == r.id ? '' : nil)}=r.name
+    %p Priority
+    = f.text_field :priority, :style => 'width: 57px;', :disabled => @editable.include?(:priority) ? nil : ''
+    %p Appear on staff page
+    = f.check_box :is_staff, :disabled => @editable.include?(:is_staff) ? nil : ''
+  .span4
+    %h4 Website Display
+    %p HTML Color Code (With the #)
+    = f.text_field :html_color, :style => 'width: 77px;', :disabled => @editable.include?(:html_color) ? nil : ''
+    %p Badge HTML Color Code (With the #)
+    = f.text_field :badge_color, :style => 'width: 77px;', :disabled => @editable.include?(:badge_color) ? nil : ''
+    %p Badge Text HTML Color Code (With the #)
+    = f.text_field :badge_text_color, :style => 'width: 77px;', :disabled => @editable.include?(:badge_text_color) ? nil : ''
+  .span4
+    %h4 In Game
+    %p Prefix
+    = f.text_field :mc_prefix, :style => 'width: 97px;', :disabled => @editable.include?(:mc_prefix) ? nil : ''
+    %p Suffix
+    = f.text_field :mc_suffix, :style => 'width: 97px;', :disabled => @editable.include?(:mc_suffix) ? nil : ''
+%br
+= f.submit :class => 'btn btn-primary'

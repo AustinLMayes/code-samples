@@ -1,0 +1,9 @@
+.span2
+  %ul.nav.nav-pills.nav-stacked{:role => 'tablist'}
+    - @ranks.each do |rank|
+      %li{:role => 'presentation'}
+        %a{'aria-controls' => "rank-#{rank.id}", 'data-toggle' => 'tab', :href => "#rank-#{rank.id}", :role => 'tab'}=rank.name
+.tab-content
+  - @ranks.each do |rank|
+    .tab-pane{:id => "rank-#{rank.id}", :role => 'tabpanel'}
+      = perm_group(@rank_gen, true, rank.id == 0? 'all' : rank.id)

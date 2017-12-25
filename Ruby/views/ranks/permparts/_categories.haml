@@ -1,0 +1,16 @@
+.span2
+  %ul.nav.nav-pills.nav-stacked{:role => 'tablist'}
+    %li{:role => 'presentation'}
+      %a{'aria-controls' => "#{@global_cat.id.to_s}", 'data-toggle' => 'tab', :href => "##{@global_cat.id.to_s}", :role => 'tab'}=@global_cat.name
+    - @forums.each do |forum|
+      - next if forum.categories.all.nil?
+      = forum.name
+      - forum.categories.all.each do |cat|
+        %li{:role => 'presentation'}
+          %a{'aria-controls' => "#{cat.id.to_s}", 'data-toggle' => 'tab', :href => "##{cat.id.to_s}", :role => 'tab'}=cat.name
+.tab-content
+  .tab-pane{:id => "#{@global_cat.id.to_s}", :role => 'tabpanel'}
+    = perm_group(@forum_gen, true, 'all')
+  - Category.all.each do |cat|
+    .tab-pane{:id => "#{cat.id.to_s}", :role => 'tabpanel'}
+      = perm_group(@forum_gen, true, cat.id)

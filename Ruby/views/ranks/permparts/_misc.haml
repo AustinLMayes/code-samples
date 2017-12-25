@@ -1,0 +1,15 @@
+.span2
+  %ul.nav.nav-pills.nav-stacked{:role => 'tablist'}
+    - Avicus::Application.config.web_perms.each do |g|
+      - next if g.id_based
+      - next if g == @api_gen
+      %li{:role => 'presentation'}
+        - human = g.parent_group.text unless g.parent_group.text.nil?
+        - human = g.model_name.pluralize.tr('::', ' ').tr('_', ' ') if human.nil?
+        %a{'aria-controls' => "misc-#{g.model_name.downcase.tr('::', '_').tr(' ', '_').tr('/', '_')}", 'data-toggle' => 'tab', :href => "#misc-#{g.model_name.to_s.downcase.tr('::', '_').tr(' ', '_').tr('/', '_')}", :role => 'tab'}=titleize(human)
+.tab-content
+  - Avicus::Application.config.web_perms.each do |g|
+    - next if g.id_based
+    - next if g == @api_gen
+    .tab-pane{:id => "misc-#{g.model_name.downcase.tr('::', '_').tr(' ', '_').tr('/', '_')}", :role => 'tabpanel'}
+      = perm_group(g)

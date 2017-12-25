@@ -1,0 +1,16 @@
+.simple-calendar
+  %table.table.table-striped
+    %thead
+      %tr
+        - date_range.slice(0, 7).each do |day|
+          %th{class: day.in_time_zone(Time.zone).to_date == Time.now.in_time_zone(Time.zone).to_date ? 'warning' : ''}= t('date.abbr_day_names')[day.wday]
+    %tbody
+      - date_range.each_slice(7) do |week|
+        %tr
+          - week.each do |day|
+            - events = sorted_events.fetch(day.in_time_zone(Time.zone).to_date, [])
+            = content_tag :td do
+              - unless events.empty?
+                - capture_haml(day.in_time_zone(Time.zone).to_date, sorted_events.fetch(day.in_time_zone(Time.zone).to_date, []), &block)
+              - else
+                .label.label-warning No reservations (yet)

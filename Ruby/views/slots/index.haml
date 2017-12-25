@@ -1,0 +1,50 @@
+- content_for :title, 'Scrimmage Servers'
+
+%section.section-dark.main-header
+  .container-fluid
+    .row-fluid
+      .span6
+        %h1 Scrimmage Servers
+        %p Reserve a scrimmage server for your team to practice and prepare for tournaments.
+    .row-fluid
+      .span1{style: 'width: 1%'}
+        %h3 Key:
+      .span4
+        .label.label-success Own Team
+        .label.label-info Other Team
+
+%section{:style => 'padding-bottom: 20px'}
+  %br
+  - if !current_user.team.nil? && current_user.team.get_role(current_user) == 'leader'
+    .container-fluid
+      %h2 Reserve a Server
+      .row-fluid
+        .span3
+          %h3 Select a start date and length.
+          = form_tag create_scrim_path, :method => 'post', :class => 'form-inline' do
+            = text_field_tag :date, '', :id => 'datepicker', :class => 'span8'
+            = select_tag :length, options_for_select(@times), :id => 'length', :class => 'span4', :onChange => 'loadCount()'
+            %br
+            %br
+            = submit_tag 'Reserve Server', :class => 'btn btn-primary'
+        .span9
+          #count
+            Select a time to check for servers!
+    %hr
+  - start_date = Date.today.in_time_zone(Time.zone) - 1.day
+  - end_date = start_date.in_time_zone(Time.zone) + 6.days
+  .container-fluid
+    %h2
+      Reservations for the week of
+      = "#{start_date.strftime('%A, %b %e %Y')} - #{end_date.strftime('%A, %b %e %Y')}"
+
+    - @servers.each do |s|
+      %h3.text-center= s.name
+      = calendar start_date: Time.now.in_time_zone(Time.zone) - 1.day, number_of_days: 7, partial: 'slots/cal', attribute: :start_at, end_attribute: :end_at, events: @slots.where(server: s.name) do |date, reservations|
+        - reservations.each do |reservation|
+          %a.label{href: scrim_path(reservation), class: current_user != nil && current_user.team == reservation.team ? 'label-success' : 'label-info'}
+            %i= "#{reservation.start_at.in_time_zone(Time.zone).strftime('%l:%M %P')} - #{reservation.end_at.in_time_zone(Time.zone).strftime('%l:%M %P')} - "
+            - if !reservation.team.nil?
+              = "[#{reservation.team.tag}]"
+
+= javascript_include_tag 'pages/slots_index'

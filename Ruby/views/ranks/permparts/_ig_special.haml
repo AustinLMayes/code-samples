@@ -1,0 +1,14 @@
+.span2
+  %ul.nav.nav-pills.nav-stacked{:role => 'tablist'}
+    - ServerCategory.all.each do |cat|
+      %li{:role => 'presentation'}
+        %a{'aria-controls' => "ig-special-#{cat.id.to_s}", 'data-toggle' => 'tab', :href => "#ig-special-#{cat.id.to_s}", :role => 'tab'}=cat.name
+.tab-content
+  - ServerCategory.all.each do |cat|
+    .tab-pane{:id => "ig-special-#{cat.id.to_s}", :role => 'tabpanel'}
+      %h4 These permissions apply to any server in the #{cat.name} category
+      - val = @special_perms[cat.id.to_s]
+      - val = val.nil? ? '' : val.join("\n")
+      %textarea{name: "rank[special][#{cat.id}]", style: 'width: 560px; height: 366px;'}= val
+
+      %br
