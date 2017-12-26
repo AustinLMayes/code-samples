@@ -1,3 +1,5 @@
+# Represents an action which can be performed on certain objects (currently appeals).
+# This was originally written so that actions could be used across object types, such as reports, but this never happened.
 class Action < ActiveRecord::Base
   belongs_to :user
   belongs_to :appeal
@@ -59,6 +61,7 @@ class Action < ActiveRecord::Base
   end
 
   # Performs numerous updates on appeals based on the action which is performed.
+  # FIXME: Raise en error is no appeal is present.
   def update_appeal_state(author)
     case self.action.to_sym
       when :open

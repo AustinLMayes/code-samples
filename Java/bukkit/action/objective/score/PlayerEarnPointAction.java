@@ -11,6 +11,9 @@ import net.avicus.atlas.util.Translations;
 import net.avicus.compendium.locale.text.LocalizedFormat;
 import org.bukkit.entity.Player;
 
+/**
+ * Action that is triggered when a player earns a point.
+ */
 @ToString
 public class PlayerEarnPointAction extends PlayerInteractWithObjectiveAction implements
     ScoreAction {

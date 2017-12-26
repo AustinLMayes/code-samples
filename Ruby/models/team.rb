@@ -1,3 +1,4 @@
+# A collection of users which can register for events and book servers.
 class Team < ActiveRecord::Base
   include Permissions::ScopedEditable
   include Permissions::ScopedExecutable

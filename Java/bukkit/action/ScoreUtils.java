@@ -34,11 +34,21 @@ import tc.oc.tracker.trackers.base.gravity.Fall;
 
 /**
  * Various utility methods to get the score a player should receive based on actions and variables.
- * Scores show go from easy -> hard in that the harder it would be to complete an action, the higher
+ * Scores should go from easy -> hard in that the harder it would be to complete an action, the higher
  * the score should be.
  */
 public class ScoreUtils {
 
+  /**
+   * Get the combined difficulty score that it would be to attack (and kill) all nearby enemy players.
+   * The result it grouped into multiple radii in sections of 5 from 5-20.
+   * IMPLEMENTATION NOTE: The distance is not factored in to the scoring calculations.
+   *
+   * @param location base of the circle
+   * @param own competitor to be counted as friendly
+   * @param module for groups access
+   * @return the combined difficulty score that it would be to attack (and kill) all nearby enemy players
+   */
   public static Pair<StringBuilder, HashMap<Integer, AtomicDouble>> getNearbyPlayers(
       Location location, Competitor own, GroupsModule module) {
     Pair<StringBuilder, HashMap<Integer, AtomicDouble>> res = MutablePair
@@ -76,7 +86,15 @@ public class ScoreUtils {
     return res;
   }
 
-  // TODO: enchantments/attributes
+  /**
+   * Get a score based on how hard it would be to kill an unarmored player with the item.
+   * This method can also be used for armor which will then return the easiness it is to SURVIVE
+   * an attack with the armor piece equipped.
+   *
+   * TODO: enchantments/attributes
+   *
+   * @param item to analyze
+   */
   public static Pair<StringBuilder, Double> getItemScore(ItemStack item) {
     Pair<StringBuilder, Double> res = MutablePair.of(new StringBuilder("Item Stack Score: "), 0.0);
     if (item == null) {
@@ -143,6 +161,10 @@ public class ScoreUtils {
     return res;
   }
 
+  /**
+   * Get a score based on how hard it would be to kill a player with the projectile.
+   * @param projectile that should be analyzed
+   */
   public static Pair<StringBuilder, Double> getProjectileScore(Projectile projectile) {
     double res = 0;
     StringBuilder stringBuilder = new StringBuilder("Projectile Score: ");
@@ -183,6 +205,12 @@ public class ScoreUtils {
     return MutablePair.of(stringBuilder, res);
   }
 
+  /**
+   * Get a score based on how hard it would be to kill a player with the specified effect.
+   * This will return negative if it would be easier to kill the player with the effect.
+   *
+   * @param effect to analyze
+   */
   public static Pair<StringBuilder, Double> getEffectScore(PotionEffect effect) {
     double res = (effect.getAmplifier() * .7) + (effect.getDuration() / 2) * .3;
     PotionEffectType type = effect.getType();
@@ -258,6 +286,11 @@ public class ScoreUtils {
     return MutablePair.of(new StringBuilder("type=" + type.getName() + " score=" + res + " "), res);
   }
 
+  /**
+   * Get the combined hardness score that it would be to kill an entity based on armor and weapon.\
+   *
+   * @param equipment that the entity has
+   */
   public static Pair<StringBuilder, Double> getEquipmentScore(EntityEquipment equipment) {
     Pair<StringBuilder, Double> res = MutablePair.of(new StringBuilder(), 0.0);
     res.getKey().append("Equipment Score: ");
@@ -279,6 +312,26 @@ public class ScoreUtils {
     return res;
   }
 
+  /**
+   * Get a score based on how hard it would be to kill en entity.
+   * This takes into account:
+   *    * Entity armor and weapon
+   *    * Potion effects of the entity
+   *    * The health of the entity
+   *
+   * TODO: Take into account
+   *    * Exhaustion
+   *    * Distance (for projectiles)
+   *    * Air level
+   *    * Proximity to:
+   *      ** Lava
+   *      ** Void
+   *      ** Large Fall
+   *      ** Allies
+   *    * Attributes
+   *
+   * @param entity to get toughness for
+   */
   public static Pair<StringBuilder, Double> getEntityToughnessScore(LivingEntity entity) {
     Pair<StringBuilder, Double> res = MutablePair.of(new StringBuilder(), 0.0);
     res.getKey().append("Entity Toughness: Effects: ");
@@ -296,6 +349,61 @@ public class ScoreUtils {
     return res;
   }
 
+  /**
+   * Get a score based on how hard it was to do the most recent damage in the supplied info.
+   * CALCULATION NOTES:
+   *    ANVIL:
+   *      How far the anvil fell
+   *      TODO: Durability of anvil
+   *    DISPENSER:
+   *      Projectile score
+   *      Distance from dispenser to location
+   *    EXPLOSION:
+   *      How far away the explosion source was away
+   *      TODO: Explosive power
+   *      TODO: Any blocks between the source and location
+   *    FALL:
+   *      Distance
+   *      Into void (MC is dumb and sometimes void kills get sent here)
+   *      Cause of the fall:
+   *        Hit:
+   *          From floor
+   *          already in void
+   *          Off of ladder AND:
+   *            into void
+   *            onto floor
+   *          Out of water AND
+   *            into void
+   *            onto floor
+   *        Projectile:
+   *          Distance
+   *          already in void
+   *          Off of ladder AND:
+   *            into void
+   *            onto floor
+   *          Out of water AND
+   *            into void
+   *            onto floor
+   *          TODO: Moving
+   *          TODO: Movement Speed
+   *          TODO: Invisible
+   *          TODO: Blocks between
+   *          TODO: Shooter blind/nausia
+   *          TODO: Angle of shot
+   *          TODO: Less for out of lava
+   *        Spleef
+   *          TODO: Moving
+   *          TODO: Movement Speed
+   *          TODO: Invisible
+   *          TODO: Distance from breaker for broken block
+   *          TODO: Block toughness
+   *    Melee:
+   *      Weapon score
+   *
+   * @param lifetime that contains the damage
+   * @param info to analyze
+   * @param damageLoc of the location
+   */
   public static Pair<StringBuilder, Double> getDamageInfoScore(Lifetime lifetime, DamageInfo info,
       Location damageLoc) {
     Pair<StringBuilder, Double> res = MutablePair.of(new StringBuilder(), 0.0);

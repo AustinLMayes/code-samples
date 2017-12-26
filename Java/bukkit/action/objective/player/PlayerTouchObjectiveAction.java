@@ -6,6 +6,9 @@ import net.avicus.atlas.module.objectives.Objective;
 import net.avicus.atlas.module.stats.action.base.PlayerAction;
 import org.bukkit.entity.Player;
 
+/**
+ * Action that is triggered when a player touches an objective.
+ */
 @ToString(callSuper = true)
 public abstract class PlayerTouchObjectiveAction extends
     PlayerInteractWithObjectiveAction implements PlayerAction {

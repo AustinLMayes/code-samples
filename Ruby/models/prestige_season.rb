@@ -1,3 +1,4 @@
+# A collection of prestige data wrapped in a date range.
 class PrestigeSeason < ActiveRecord::Base
   has_many :prestige_levels, dependent: :destroy, foreign_key: 'season_id'
   has_many :experience_transactions, dependent: :destroy, foreign_key: 'season_id'
@@ -24,6 +25,8 @@ class PrestigeSeason < ActiveRecord::Base
     PrestigeSeason.where('start_at < (?) AND end_at > (?)', Time.now, Time.now).first
   end
 
+  # Get the amount of XP a user has based on the current season.
+  # This will never return nil.
   def self.xp(user)
     return 0 if user.nil? || user.is_a?(DummyUser)
     current = PrestigeSeason.current_season

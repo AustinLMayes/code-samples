@@ -1,3 +1,7 @@
+# Initializer used to load a config file into application memory.
+# This can combine multiple config sections into one and exposes all to application-wide variable.
+# Variable access is hash-based.
+
 yaml = YAML.load(File.open(Rails.root.join('config/avicus.yml')))
 
 unless yaml['default']

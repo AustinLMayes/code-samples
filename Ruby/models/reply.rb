@@ -1,3 +1,5 @@
+# A reply to a discussion.
+# Theoretically, replies can be nested infinitely.
 class Reply < ActiveRecord::Base
   include Permissions::Forums #reply-specific permissions at bottom of class.
   acts_as_readable :on => :created_at

@@ -1,5 +1,8 @@
 require 'graphql/ql_model'
 
+# A person who can interact with different objects.
+# Everyone who logs in to a game server is saved as a user, and not just those who have a forum account.
+# TODO: Decouple this into concerns.
 class User < ActiveRecord::Base
   include CachableModel
 

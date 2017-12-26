@@ -1,3 +1,4 @@
+# A collection of discussions inside of a foru,.
 class Category < ActiveRecord::Base
   include Permissions::Forums
   include Permissions::Editable
@@ -38,6 +39,7 @@ class Category < ActiveRecord::Base
     self.permission_definition[:permissions_sets][0][:edit]
   end
 
+  # Helper method
   def can_mass_moderate?(user)
     user.has_permission?(:categories, self.id, :mass_moderate, true)
   end

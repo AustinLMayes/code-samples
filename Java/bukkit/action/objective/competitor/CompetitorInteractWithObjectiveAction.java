@@ -8,6 +8,9 @@ import net.avicus.atlas.module.objectives.Objective;
 import net.avicus.atlas.module.stats.action.base.CompetitorAction;
 import net.avicus.atlas.module.stats.action.objective.ObjectiveAction;
 
+/**
+ * Action that is triggered when a competitor interacts with an objective.
+ */
 @ToString(callSuper = true)
 public abstract class CompetitorInteractWithObjectiveAction extends ObjectiveAction implements
     CompetitorAction {

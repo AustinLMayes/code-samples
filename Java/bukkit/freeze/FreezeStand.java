@@ -8,19 +8,30 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+/**
+ * Represents an armor stand attached to a UUID used for freezing.
+ */
 final class FreezeStand {
 
+  /** UUID of the player that this stand is for. */
   private final UUID targetId;
+  /** If the stand has been spawned. */
   private boolean active;
 
   FreezeStand(final UUID targetId) {
     this.targetId = targetId;
   }
 
+  /**
+   * Get a player from the stand's target UUID.
+   */
   private Optional<Player> getTarget() {
     return Optional.ofNullable(Bukkit.getPlayer(this.targetId));
   }
 
+  /**
+   * Create a stand and attach a player to it.
+   */
   void create() {
     if (this.active) {
       return;
@@ -44,6 +55,9 @@ final class FreezeStand {
     });
   }
 
+  /**
+   * Remove a stand and release a player.
+   */
   void remove() {
     this.getTarget().ifPresent(player -> {
       Entity vehicle = player;

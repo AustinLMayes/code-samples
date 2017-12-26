@@ -41,8 +41,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
+/**
+ * Used to handle the freezing and un-freezing of players.
+ */
 public class FreezeModule implements CommandModule, ListenerModule {
 
+  /** A map of UUIDs to the stands that they are frozen to. */
   private final Map<UUID, FreezeStand> stands = new HashMap<>();
 
   @Override
@@ -50,10 +54,22 @@ public class FreezeModule implements CommandModule, ListenerModule {
     registrar.register(Commands.class);
   }
 
+  /**
+   * Check if an entity if currently frozen.
+   *
+   * @param entity to check
+   */
   public boolean isFrozen(final Entity entity) {
     return this.stands.containsKey(entity.getUniqueId());
   }
 
+  /**
+   * Set a player as (un)frozen.
+   *
+   * @param victim to (un)freeze
+   * @param frozen if they should be frozen
+   * @param extinguish if frozen, TNT around them should be extinguished
+   */
   public void setFrozen(final Player victim, final boolean frozen, final boolean extinguish) {
     if (frozen) {
       this.stands.computeIfAbsent(victim.getUniqueId(), FreezeStand::new).create();
@@ -68,6 +84,11 @@ public class FreezeModule implements CommandModule, ListenerModule {
     }
   }
 
+  /**
+   * Remove TNT and put out entities around a player.
+   *
+   * @param victim to use as a location base
+   */
   private void extinguish(final Player victim) {
     final int tntRadius = MagmaConfig.Freeze.Radius.getTnt();
     if (tntRadius != -1) {
@@ -199,6 +220,9 @@ public class FreezeModule implements CommandModule, ListenerModule {
     }
   }
 
+  /**
+   * In game commands.
+   */
   public static class Commands {
 
     @Command(aliases = {"freeze",

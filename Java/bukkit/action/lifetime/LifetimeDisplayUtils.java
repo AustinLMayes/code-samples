@@ -35,9 +35,14 @@ import tc.oc.tracker.damage.FallDamageInfo;
 import tc.oc.tracker.damage.MeleeDamageInfo;
 import tc.oc.tracker.damage.ProjectileDamageInfo;
 
+/**
+ * Various methods used to display lifetime stats to users.
+ */
 public class LifetimeDisplayUtils {
 
+  /** Format for displaying a data point followed by a number. */
   private static UnlocalizedFormat format = new UnlocalizedFormat("{0}: {1}");
+  /** Color of all numbers. */
   private static TextStyle numStyle = TextStyle.ofColor(ChatColor.GOLD).bold();
 
   // Taglines
@@ -60,19 +65,39 @@ public class LifetimeDisplayUtils {
 
   private static Random random = new Random();
 
+  /**
+   * Get a random tagline from a list
+   * @param source list of tags to select from
+   */
   public static Localizable randomTag(List<LocalizedFormat> source) {
     return source.get(random.nextInt(source.size())).with(ChatColor.BLUE);
   }
 
+  /**
+   * Helper method to melee info for a lifetime.
+   *
+   * @param lifetime to get actions from
+   */
   public static List<Localizable> getMeleeDisplay(PlayerLifetime lifetime) {
     return getMeleeDisplay(lifetime.getActions());
   }
 
+  /**
+   * Helper method to melee info for a all lifetimes for a UUID.
+   *
+   * @param store that contains the lifetimes
+   * @param uuid to get data for
+   */
   public static List<Localizable> getMeleeDisplay(LifetimeStore store, UUID uuid) {
     return getMeleeDisplay(store.getPlayerLifetimes().get(uuid).stream()
         .flatMap(lifetime -> lifetime.getActions().stream()).collect(Collectors.toList()));
   }
 
+  /**
+   * Get everything a player did inside a set of actions in relation to melee.
+   *
+   * @param actions to gather data from
+   */
   public static List<Localizable> getMeleeDisplay(List<PlayerAction> actions) {
     List<Localizable> result = new ArrayList<>();
 
@@ -231,17 +256,32 @@ public class LifetimeDisplayUtils {
     return result;
   }
 
+  /**
+   * Get a random localized fact from a list.
+   *
+   * @param source list of facts
+   */
   public static Localizable getRandomMatchFact(List<Localizable> source) {
     return new UnlocalizedFormat("{0} {1}")
         .with(Translations.STATS_FACTS_RANDOM.with(ChatColor.GOLD),
             source.get(random.nextInt(source.size())));
   }
 
+  /**
+   * Get all fact data from a set of lifetimes.
+   *
+   * @param store that contains the lifetimes
+   */
   public static List<Localizable> getMatchFacts(LifetimeStore store) {
     return getMatchFacts(store.getPlayerLifetimes().values().stream()
         .flatMap(lifetime -> lifetime.getActions().stream()).collect(Collectors.toList()));
   }
 
+  /**
+   * Get all fact data from a set of lifetimes.
+
+   * @param actions to gather data from
+   */
   public static List<Localizable> getMatchFacts(List<PlayerAction> actions) {
     List<Localizable> result = new ArrayList<>();
 
@@ -343,6 +383,12 @@ public class LifetimeDisplayUtils {
     return result;
   }
 
+  /**
+   * Get information regarding actions related to objectives inside of a lifetime.
+   *
+   * @param lifetime that contains the actions
+   * @param sender who is viewing the message
+   */
   public static List<Localizable> getObjectiveDisplay(PlayerLifetime lifetime,
       CommandSender sender) {
     ArrayListMultimap<Objective, ObjectiveAction> map = ArrayListMultimap.create();
@@ -353,6 +399,13 @@ public class LifetimeDisplayUtils {
     return getObjectiveDisplay(map, sender);
   }
 
+  /**
+   * Get information regarding actions related to objectives inside of all lifetimes related to a UUID.
+   *
+   * @param store that contains the lifetimes
+   * @param uuid to filter lifetimes by
+   * @param sender who is viewing the message
+   */
   public static List<Localizable> getObjectiveDisplay(LifetimeStore store, UUID uuid,
       CommandSender sender) {
     ArrayListMultimap<Objective, ObjectiveAction> map = ArrayListMultimap.create();
@@ -366,6 +419,12 @@ public class LifetimeDisplayUtils {
     return getObjectiveDisplay(map, sender);
   }
 
+  /**
+   * Get all information gathered from the supplied actions for each objective.
+   *
+   * @param map of objectives -> objective actions
+   * @param sender who is viewing the message
+\   */
   public static List<Localizable> getObjectiveDisplay(
       ArrayListMultimap<Objective, ObjectiveAction> map, CommandSender sender) {
     List<Localizable> result = new ArrayList<>();

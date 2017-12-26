@@ -1,3 +1,4 @@
+# A Minecraft server.
 class Server < ActiveRecord::Base
   belongs_to :server_category, optional: true
   belongs_to :server_group, optional: true

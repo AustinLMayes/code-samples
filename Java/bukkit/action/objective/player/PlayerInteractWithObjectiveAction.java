@@ -8,6 +8,9 @@ import net.avicus.atlas.module.stats.action.base.PlayerAction;
 import net.avicus.atlas.module.stats.action.objective.ObjectiveAction;
 import org.bukkit.entity.Player;
 
+/**
+ * Action that is triggered when a player interacts with an objective.
+ */
 @ToString(callSuper = true)
 public abstract class PlayerInteractWithObjectiveAction extends ObjectiveAction implements
     PlayerAction {

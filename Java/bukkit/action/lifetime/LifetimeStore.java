@@ -25,6 +25,9 @@ import net.avicus.atlas.module.stats.action.lifetime.type.ObjectiveLifetime;
 import net.avicus.atlas.module.stats.action.lifetime.type.PlayerLifetime;
 import org.bukkit.entity.Player;
 
+/**
+ * Container class used to store all lifetimes for a match.
+ */
 @Getter
 @ToString
 public class LifetimeStore {
@@ -51,6 +54,14 @@ public class LifetimeStore {
     match.getPlayers().forEach(this::restartLifetime);
   }
 
+  /**
+   * Get (or create) a lifetime for a player.
+   * If create is false and the player has no current lifetime, the will return null.
+   * Callers who set create to true need not check for null values.
+   *
+   * @param player to get the lifetime for
+   * @param create if no lifetime if found, if one should be created
+   */
   public PlayerLifetime getCurrentLifetime(Player player, boolean create) {
     if (this.playerLifetimes.containsKey(player.getUniqueId())) {
       return this.playerLifetimes.get(player.getUniqueId())
@@ -66,6 +77,11 @@ public class LifetimeStore {
     return null;
   }
 
+  /**
+   * Get (or create) a lifetime for the specified objective.
+   *
+   * @param objective to get the lifetime for
+   */
   public ObjectiveLifetime getCurrentLifetime(Objective objective) {
     if (this.objectiveLifetimes.containsKey(objective)) {
       return this.objectiveLifetimes.get(objective);
@@ -76,6 +92,11 @@ public class LifetimeStore {
     return newLife;
   }
 
+  /**
+   * Get (or create) a lifetime for the specified competitor.
+   *
+   * @param competitor to get the lifetime for
+   */
   public CompetitorLifetime getCurrentLifetime(Competitor competitor) {
     if (this.competitorLifetimes.containsKey(competitor)) {
       return this.competitorLifetimes.get(competitor);
@@ -86,6 +107,11 @@ public class LifetimeStore {
     return newLife;
   }
 
+  /**
+   * End a player's current lifetime (if one exists) and start a new one.
+   *
+   * @param player to restart the lifetime for
+   */
   public PlayerLifetime restartLifetime(Player player) {
     PlayerLifetime lifetime = this.getCurrentLifetime(player, false);
     if (lifetime != null) {
@@ -98,11 +124,25 @@ public class LifetimeStore {
     return newLife;
   }
 
+  /**
+   * Get a player's combined score for their current lifetime.
+   *
+   * @param uuid to get the score for
+   */
   public double getScore(UUID uuid) {
     return this.getPlayerLifetimes().get(uuid).stream().flatMap(l -> l.getActions().stream())
         .mapToDouble(Action::getScore).sum();
   }
 
+  /**
+   * Get the most common attribute shared across mutliple action classes for all player lifetimes.
+   * This will return null IF no attributes match.
+   *
+   * @param actionClass type of action filer stream by
+   * @param refMethod function to get an attribute from the specified action
+   * @param <N> type of attribute that should be returned
+   * @param <C> type of action that the stream is iterating through
+   */
   @Nullable
   public <N, C extends Action> N mostCommonAttribute(Class<? extends C> actionClass,
       Function<C, N> refMethod) {
@@ -119,6 +159,9 @@ public class LifetimeStore {
         .orElse(null);
   }
 
+  /**
+   * See {@link #mostCommonAttribute(Class, Function)}. This just filters by UUID.
+   */
   @Nullable
   public <N, C extends Action> N mostCommonAttribute(UUID actor, Class<? extends C> actionClass,
       Function<C, N> refMethod) {

@@ -7,6 +7,9 @@ import net.avicus.atlas.module.objectives.Objective;
 import net.avicus.atlas.module.stats.action.base.Action;
 import net.avicus.compendium.locale.text.LocalizedFormat;
 
+/**
+ * Any action that is performed on an objective.
+ */
 @ToString
 public abstract class ObjectiveAction implements Action {
 

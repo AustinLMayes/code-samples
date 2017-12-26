@@ -29,7 +29,7 @@ module Admin::RanksHelper
   def generate_path(id_based, id, *path)
     path.flatten!
     if id_based
-      path.insert(1, "#{id}")
+      path.insert(1, "#{id}") # Add the ID to the hash
     end
     path
   end

@@ -1,3 +1,4 @@
+# A forum topic made by a user inside of category that can be replied to.
 class Discussion < ActiveRecord::Base
   include Permissions::Forums
   include CachableModel
@@ -34,7 +35,7 @@ class Discussion < ActiveRecord::Base
   # This is sorted from newest to oldest.
   def revisions
     if id == nil
-      Revision.where('1=0')
+      Revision.where('1=0') # This is a hacky way to return a typed AR record array
     end
     Revision.where(:discussion_id => id).where('reply_id IS null').order('created_at DESC')
   end
@@ -110,7 +111,7 @@ class Discussion < ActiveRecord::Base
     Reply.where(:discussion_id => id).order('created_at ASC')
   end
 
-  # Get the latest reply that a user can see,
+  # Get the latest reply that a user can see
   def latest(user)
     public_replies(user).last
   end

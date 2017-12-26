@@ -1,3 +1,4 @@
+# A collection of servers.
 class ServerCategory < ActiveRecord::Base
   has_many :servers
 

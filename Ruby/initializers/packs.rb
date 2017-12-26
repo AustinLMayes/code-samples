@@ -1,3 +1,6 @@
+# This is used to load icons and colors and sort them into specific packs.
+# TODO: Load icons/colors from a CSS source so they always reflect style changes.
+
 class Packs
   # Icons
   BASIC = {

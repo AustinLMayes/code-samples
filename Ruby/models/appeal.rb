@@ -1,3 +1,4 @@
+# An attempt by a user to get a punishment appealed.
 class Appeal < ActiveRecord::Base
   has_many :actions
   belongs_to :punishment
@@ -59,7 +60,7 @@ class Appeal < ActiveRecord::Base
     return 'Open'
   end
 
-  # Send an alert to users involed in the appeal.
+  # Send an alert to users involved in the appeal.
   # This will NOT
   #   Alert the person who performed the action
   #   Alert users who no longer have access to view the appeal.
@@ -119,6 +120,7 @@ class Appeal < ActiveRecord::Base
     text
   end
 
+  # Determine if a user made the appeal OR issued the punishment that the appeal is for.
   def owns?(user)
     user == self.punishment.user || (user == self.punishment.staff && self.punishment.can_issue?(user))
   end

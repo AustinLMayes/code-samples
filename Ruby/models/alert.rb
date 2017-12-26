@@ -1,3 +1,4 @@
+# Represents a message sent to a user to notify them of something.
 class Alert < ActiveRecord::Base
   acts_as_readable :on => :created_at
   belongs_to :user
