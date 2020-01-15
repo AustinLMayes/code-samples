@@ -18,31 +18,38 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public abstract class ExternalComponent {
 
-  private final GamesPlugin plugin;
+    private final GamesPlugin plugin;
 
-  /**
-   * Constructor.
-   *
-   * @param plugin which owns the facet
-   */
-  public ExternalComponent(GamesPlugin plugin) {
-    this.plugin = plugin;
-  }
+    /**
+     * Constructor.
+     *
+     * @param plugin which owns the facet
+     */
+    public ExternalComponent(GamesPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-  /** Called when main bukkit plugin is enabled. */
-  public void onEnable() {}
+    /**
+     * Called when main bukkit plugin is enabled.
+     */
+    public void onEnable() {
+    }
 
-  /** Called when main bukkit plugin is disabled. */
-  public void onDisable() {}
+    /**
+     * Called when main bukkit plugin is disabled.
+     */
+    public void onDisable() {
+    }
 
-  /**
-   * Load in config data specific to the component from the main config.
-   *
-   * @param section containing all configuration data for the component
-   */
-  public void loadConfig(ConfigurationSection section) {}
+    /**
+     * Load in config data specific to the component from the main config.
+     *
+     * @param section containing all configuration data for the component
+     */
+    public void loadConfig(ConfigurationSection section) {
+    }
 
-  public GamesPlugin getPlugin() {
-    return plugin;
-  }
+    public GamesPlugin getPlugin() {
+        return plugin;
+    }
 }
