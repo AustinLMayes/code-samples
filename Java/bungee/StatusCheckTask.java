@@ -1,3 +1,11 @@
+/*
+The code contained in this file is provided without warranty, it was likely grabbed from a closed-source/abandoned
+project and will in most cases not function out of the box. This file is merely intended as a representation of the
+design pasterns and different problem-solving approaches I use to tackle various problems.
+
+The original file can be found here: https://github.com/Avicus/AvicusNetwork
+*/
+
 package net.avicus.magma.bungee;
 
 
@@ -10,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HttpsURLConnection;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.avicus.magma.core.database.Database;
@@ -22,107 +31,107 @@ import net.md_5.bungee.event.EventHandler;
 
 public class StatusCheckTask implements Runnable, Listener {
 
-  private final Magma plugin;
-  private final Database database;
-  private final List<Boolean> statusHistory;
-  @Getter
-  @Setter
-  private boolean sessionsOnline = true;
+    private final Magma plugin;
+    private final Database database;
+    private final List<Boolean> statusHistory;
+    @Getter
+    @Setter
+    private boolean sessionsOnline = true;
 
-  public StatusCheckTask(Magma plugin, Database database) {
-    this.plugin = plugin;
-    this.database = database;
-    this.statusHistory = new ArrayList<>();
-  }
-
-  public StatusCheckTask start() {
-    this.plugin.getProxy().getScheduler().schedule(this.plugin, this, 0, 100, TimeUnit.SECONDS);
-    return this;
-  }
-
-  @EventHandler
-  public void onPreLogin(PreLoginEvent event) throws SQLException {
-    if (event.getConnection().getVersion() < 4) {
-      event.setCancelReason(ChatColor.translateAlternateColorCodes('&',
-          "&c&nOutdated Minecraft Version!\n\n&fPlease update your Minecraft version \n&fto 1.7 or greater to join Avicus!"));
-      event.setCancelled(true);
-      return;
+    public StatusCheckTask(Magma plugin, Database database) {
+        this.plugin = plugin;
+        this.database = database;
+        this.statusHistory = new ArrayList<>();
     }
 
-    // ==================
-    // == Offline Mode ==
-    // ==================
-    // To sum this up:
-    // 1. Find user who has the same username.
-    // 2. Check their latest 15 logins.
-    // 3. Do any IPs match this one?
-    // 4. -> Set UUID to the one in the database
-    // 5. -> Set offline mode (don't check Mojang servers)
+    public StatusCheckTask start() {
+        this.plugin.getProxy().getScheduler().schedule(this.plugin, this, 0, 100, TimeUnit.SECONDS);
+        return this;
+    }
 
-    boolean offlineMode = !this.isSessionsOnline();
-
-    if (offlineMode) {
-      String ip = event.getConnection().getAddress().getAddress().getHostAddress();
-      Optional<User> user = this.database.getUsers().findByName(event.getConnection().getName());
-
-      if (user.isPresent()) {
-        UUID uuid = user.get().getUniqueId();
-        List<Session> sessions = this.database.getSessions().select()
-            .where("user_id", user.get().getUniqueId()).limit(15).order("created_at", "DESC")
-            .execute();
-
-        List<String> safeIps = new ArrayList<String>();
-
-        for (Session session : sessions) {
-          String sessionIp = session.getIp();
-
-          if (!safeIps.contains(sessionIp)) {
-            safeIps.add(sessionIp);
-          }
+    @EventHandler
+    public void onPreLogin(PreLoginEvent event) throws SQLException {
+        if (event.getConnection().getVersion() < 4) {
+            event.setCancelReason(ChatColor.translateAlternateColorCodes('&',
+                    "&c&nOutdated Minecraft Version!\n\n&fPlease update your Minecraft version \n&fto 1.7 or greater to join Avicus!"));
+            event.setCancelled(true);
+            return;
         }
 
-        for (String safeIp : safeIps) {
-          if (safeIp.equals(ip)) {
-            event.getConnection().setOnlineMode(false);
-            event.getConnection().setUniqueId(uuid);
-            break;
-          }
+        // ==================
+        // == Offline Mode ==
+        // ==================
+        // To sum this up:
+        // 1. Find user who has the same username.
+        // 2. Check their latest 15 logins.
+        // 3. Do any IPs match this one?
+        // 4. -> Set UUID to the one in the database
+        // 5. -> Set offline mode (don't check Mojang servers)
+
+        boolean offlineMode = !this.isSessionsOnline();
+
+        if (offlineMode) {
+            String ip = event.getConnection().getAddress().getAddress().getHostAddress();
+            Optional<User> user = this.database.getUsers().findByName(event.getConnection().getName());
+
+            if (user.isPresent()) {
+                UUID uuid = user.get().getUniqueId();
+                List<Session> sessions = this.database.getSessions().select()
+                        .where("user_id", user.get().getUniqueId()).limit(15).order("created_at", "DESC")
+                        .execute();
+
+                List<String> safeIps = new ArrayList<String>();
+
+                for (Session session : sessions) {
+                    String sessionIp = session.getIp();
+
+                    if (!safeIps.contains(sessionIp)) {
+                        safeIps.add(sessionIp);
+                    }
+                }
+
+                for (String safeIp : safeIps) {
+                    if (safeIp.equals(ip)) {
+                        event.getConnection().setOnlineMode(false);
+                        event.getConnection().setUniqueId(uuid);
+                        break;
+                    }
+                }
+            }
         }
-      }
-    }
-  }
-
-  @Override
-  public void run() {
-    this.statusHistory.add(checkStatus());
-
-    if (this.statusHistory.size() > 12) {
-      this.statusHistory.remove(0);
     }
 
-    int online = 0;
-    for (boolean status : this.statusHistory) {
-      if (status) {
-        online++;
-      }
-    }
-    double percent = (double) online / (double) this.statusHistory.size();
-    this.setSessionsOnline(percent >= 0.90);
-  }
+    @Override
+    public void run() {
+        this.statusHistory.add(checkStatus());
 
-  private boolean checkStatus() {
-    try {
-      HttpsURLConnection connection = (HttpsURLConnection) new URL(
-          "https://sessionserver.mojang.com").openConnection();
-      connection.setConnectTimeout(10000);
-      connection.setReadTimeout(10000);
-      connection.setRequestMethod("HEAD");
-      int responseCode = connection.getResponseCode();
-      connection.disconnect();
+        if (this.statusHistory.size() > 12) {
+            this.statusHistory.remove(0);
+        }
 
-      return responseCode >= 200 && responseCode <= 399;
-    } catch (IOException exception) {
-      return false;
+        int online = 0;
+        for (boolean status : this.statusHistory) {
+            if (status) {
+                online++;
+            }
+        }
+        double percent = (double) online / (double) this.statusHistory.size();
+        this.setSessionsOnline(percent >= 0.90);
     }
-  }
+
+    private boolean checkStatus() {
+        try {
+            HttpsURLConnection connection = (HttpsURLConnection) new URL(
+                    "https://sessionserver.mojang.com").openConnection();
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
+            connection.setRequestMethod("HEAD");
+            int responseCode = connection.getResponseCode();
+            connection.disconnect();
+
+            return responseCode >= 200 && responseCode <= 399;
+        } catch (IOException exception) {
+            return false;
+        }
+    }
 }

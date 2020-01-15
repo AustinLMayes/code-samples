@@ -1,7 +1,16 @@
+/*
+The code contained in this file is provided without warranty, it was likely grabbed from a closed-source/abandoned
+project and will in most cases not function out of the box. This file is merely intended as a representation of the
+design pasterns and different problem-solving approaches I use to tackle various problems.
+
+The original file can be found here: https://github.com/Avicus/AvicusNetwork
+*/
+
 package net.avicus.atlas.module.stats.action.lifetime;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multiset;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +19,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import net.avicus.atlas.module.objectives.Objective;
 import net.avicus.atlas.module.stats.action.base.PlayerAction;
 import net.avicus.atlas.module.stats.action.damage.PlayerAssistKillAction;
@@ -40,414 +50,420 @@ import tc.oc.tracker.damage.ProjectileDamageInfo;
  */
 public class LifetimeDisplayUtils {
 
-  /** Format for displaying a data point followed by a number. */
-  private static UnlocalizedFormat format = new UnlocalizedFormat("{0}: {1}");
-  /** Color of all numbers. */
-  private static TextStyle numStyle = TextStyle.ofColor(ChatColor.GOLD).bold();
+    /**
+     * Format for displaying a data point followed by a number.
+     */
+    private static UnlocalizedFormat format = new UnlocalizedFormat("{0}: {1}");
+    /**
+     * Color of all numbers.
+     */
+    private static TextStyle numStyle = TextStyle.ofColor(ChatColor.GOLD).bold();
 
-  // Taglines
-  private static List<LocalizedFormat> fallTags = Arrays
-      .asList(Translations.STATS_FACTS_FALL_TAGLINE_TAG1,
-          Translations.STATS_FACTS_FALL_TAGLINE_TAG2, Translations.STATS_FACTS_FALL_TAGLINE_TAG3);
-  private static List<LocalizedFormat> killMostTags = Arrays
-      .asList(Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG1,
-          Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG2,
-          Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG3,
-          Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG4);
-  private static List<LocalizedFormat> killAssistTags = Arrays
-      .asList(Translations.STATS_FACTS_KILLS_ASSISTS_TAGLINE_TAG1,
-          Translations.STATS_FACTS_KILLS_ASSISTS_TAGLINE_TAG2,
-          Translations.STATS_FACTS_KILLS_ASSISTS_TAGLINE_TAG3);
-  private static List<LocalizedFormat> snipeTags = Arrays
-      .asList(Translations.STATS_FACTS_SNIPE_TAGLINE_TAG1,
-          Translations.STATS_FACTS_SNIPE_TAGLINE_TAG2, Translations.STATS_FACTS_SNIPE_TAGLINE_TAG3,
-          Translations.STATS_FACTS_SNIPE_TAGLINE_TAG4);
+    // Taglines
+    private static List<LocalizedFormat> fallTags = Arrays
+            .asList(Translations.STATS_FACTS_FALL_TAGLINE_TAG1,
+                    Translations.STATS_FACTS_FALL_TAGLINE_TAG2, Translations.STATS_FACTS_FALL_TAGLINE_TAG3);
+    private static List<LocalizedFormat> killMostTags = Arrays
+            .asList(Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG1,
+                    Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG2,
+                    Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG3,
+                    Translations.STATS_FACTS_KILLS_MOST_TAGLINE_TAG4);
+    private static List<LocalizedFormat> killAssistTags = Arrays
+            .asList(Translations.STATS_FACTS_KILLS_ASSISTS_TAGLINE_TAG1,
+                    Translations.STATS_FACTS_KILLS_ASSISTS_TAGLINE_TAG2,
+                    Translations.STATS_FACTS_KILLS_ASSISTS_TAGLINE_TAG3);
+    private static List<LocalizedFormat> snipeTags = Arrays
+            .asList(Translations.STATS_FACTS_SNIPE_TAGLINE_TAG1,
+                    Translations.STATS_FACTS_SNIPE_TAGLINE_TAG2, Translations.STATS_FACTS_SNIPE_TAGLINE_TAG3,
+                    Translations.STATS_FACTS_SNIPE_TAGLINE_TAG4);
 
-  private static Random random = new Random();
+    private static Random random = new Random();
 
-  /**
-   * Get a random tagline from a list
-   * @param source list of tags to select from
-   */
-  public static Localizable randomTag(List<LocalizedFormat> source) {
-    return source.get(random.nextInt(source.size())).with(ChatColor.BLUE);
-  }
-
-  /**
-   * Helper method to melee info for a lifetime.
-   *
-   * @param lifetime to get actions from
-   */
-  public static List<Localizable> getMeleeDisplay(PlayerLifetime lifetime) {
-    return getMeleeDisplay(lifetime.getActions());
-  }
-
-  /**
-   * Helper method to melee info for a all lifetimes for a UUID.
-   *
-   * @param store that contains the lifetimes
-   * @param uuid to get data for
-   */
-  public static List<Localizable> getMeleeDisplay(LifetimeStore store, UUID uuid) {
-    return getMeleeDisplay(store.getPlayerLifetimes().get(uuid).stream()
-        .flatMap(lifetime -> lifetime.getActions().stream()).collect(Collectors.toList()));
-  }
-
-  /**
-   * Get everything a player did inside a set of actions in relation to melee.
-   *
-   * @param actions to gather data from
-   */
-  public static List<Localizable> getMeleeDisplay(List<PlayerAction> actions) {
-    List<Localizable> result = new ArrayList<>();
-
-    int kills = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerKillAction).count();
-    if (kills > 0) {
-      result.add(format
-          .with(ChatColor.AQUA, Translations.STATS_DAMAGE_KILLS_KILLS.with(ChatColor.AQUA),
-              new LocalizedNumber(kills, numStyle)));
-
-      if (kills > 4) {
-        // Weapon
-        Material weapon = CollectionUtils
-            .mostCommonAttribute(actions, PlayerKillAction.class, (playerAction -> {
-              PlayerKillAction action = (PlayerKillAction) playerAction;
-              if (action.getInfo() instanceof MeleeDamageInfo) {
-                return ((MeleeDamageInfo) action.getInfo()).getWeapon();
-              }
-              return null;
-            }));
-        if (weapon != null && weapon != Material.AIR) {
-          result.add(Translations.STATS_DAMAGE_KILLS_CAUSE_WEAPON
-              .with(ChatColor.AQUA, weapon.name().replace("_", " ").toLowerCase()));
-        }
-
-        // Bow
-        Number distance = CollectionUtils
-            .highestNumber(actions, PlayerKillAction.class, (playerAction -> {
-              PlayerKillAction action = (PlayerKillAction) playerAction;
-              if (action.getInfo() instanceof ProjectileDamageInfo) {
-                return ((ProjectileDamageInfo) action.getInfo()).getDistance();
-              }
-              return 0.0;
-            }));
-        if (distance != null && distance.intValue() > 10) {
-          result.add(Translations.STATS_DAMAGE_KILLS_CAUSE_BOW
-              .with(ChatColor.AQUA, new LocalizedNumber(distance, 1, 1, numStyle)));
-        }
-      }
-
-      if (kills > 15) {
-        Player victim = CollectionUtils
-            .mostCommonAttribute(actions, PlayerKillAction.class, (playerAction -> {
-              PlayerKillAction action = (PlayerKillAction) playerAction;
-              return action.getVictim();
-            }));
-        if (victim != null) {
-          int count = (int) actions.stream().filter(
-              playerAction -> playerAction instanceof PlayerKillAction
-                  && ((PlayerKillAction) playerAction).getVictim().equals(victim)).count();
-          result.add(Translations.STATS_DAMAGE_KILLS_MOST
-              .with(ChatColor.AQUA, new UnlocalizedText(victim.getDisplayName()),
-                  new LocalizedNumber(count, numStyle)));
-        }
-      }
+    /**
+     * Get a random tagline from a list
+     *
+     * @param source list of tags to select from
+     */
+    public static Localizable randomTag(List<LocalizedFormat> source) {
+        return source.get(random.nextInt(source.size())).with(ChatColor.BLUE);
     }
 
-    int killAssists = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerAssistKillAction).count();
-    if (killAssists > 0) {
-      // Weapon
-      Material weapon = CollectionUtils
-          .mostCommonAttribute(actions, PlayerAssistKillAction.class, (playerAction -> {
-            PlayerAssistKillAction action = (PlayerAssistKillAction) playerAction;
-            if (action.getInfo() instanceof MeleeDamageInfo) {
-              return ((MeleeDamageInfo) action.getInfo()).getWeapon();
-            }
-            return null;
-          }));
-      result.add(Translations.STATS_DAMAGE_ASSIST_ASSISTS
-          .with(ChatColor.AQUA, new LocalizedNumber(killAssists, numStyle)));
-      if (weapon != null && weapon != Material.AIR) {
-        result.add(Translations.STATS_DAMAGE_ASSIST_WEAPON
-            .with(ChatColor.AQUA, weapon.name().replace("_", " ").toLowerCase()));
-      }
+    /**
+     * Helper method to melee info for a lifetime.
+     *
+     * @param lifetime to get actions from
+     */
+    public static List<Localizable> getMeleeDisplay(PlayerLifetime lifetime) {
+        return getMeleeDisplay(lifetime.getActions());
     }
 
-    int deathsNatural = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerDeathByNaturalAction).count();
-    if (deathsNatural > 0) {
-      result.add(format.with(ChatColor.AQUA,
-          Translations.STATS_DAMAGE_DEATHS_CATEGORY_NATURAL.with(ChatColor.AQUA),
-          new LocalizedNumber(deathsNatural, numStyle)));
-      // Fall
-      Number totalFall = actions.stream()
-          .filter(playerAction -> playerAction instanceof PlayerDeathByNaturalAction)
-          .mapToDouble(value -> {
-            PlayerDeathByNaturalAction action = (PlayerDeathByNaturalAction) value;
-            if (action.getInfo() instanceof FallDamageInfo) {
-              return (double) ((FallDamageInfo) action.getInfo()).getFallDistance();
+    /**
+     * Helper method to melee info for a all lifetimes for a UUID.
+     *
+     * @param store that contains the lifetimes
+     * @param uuid  to get data for
+     */
+    public static List<Localizable> getMeleeDisplay(LifetimeStore store, UUID uuid) {
+        return getMeleeDisplay(store.getPlayerLifetimes().get(uuid).stream()
+                .flatMap(lifetime -> lifetime.getActions().stream()).collect(Collectors.toList()));
+    }
+
+    /**
+     * Get everything a player did inside a set of actions in relation to melee.
+     *
+     * @param actions to gather data from
+     */
+    public static List<Localizable> getMeleeDisplay(List<PlayerAction> actions) {
+        List<Localizable> result = new ArrayList<>();
+
+        int kills = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerKillAction).count();
+        if (kills > 0) {
+            result.add(format
+                    .with(ChatColor.AQUA, Translations.STATS_DAMAGE_KILLS_KILLS.with(ChatColor.AQUA),
+                            new LocalizedNumber(kills, numStyle)));
+
+            if (kills > 4) {
+                // Weapon
+                Material weapon = CollectionUtils
+                        .mostCommonAttribute(actions, PlayerKillAction.class, (playerAction -> {
+                            PlayerKillAction action = (PlayerKillAction) playerAction;
+                            if (action.getInfo() instanceof MeleeDamageInfo) {
+                                return ((MeleeDamageInfo) action.getInfo()).getWeapon();
+                            }
+                            return null;
+                        }));
+                if (weapon != null && weapon != Material.AIR) {
+                    result.add(Translations.STATS_DAMAGE_KILLS_CAUSE_WEAPON
+                            .with(ChatColor.AQUA, weapon.name().replace("_", " ").toLowerCase()));
+                }
+
+                // Bow
+                Number distance = CollectionUtils
+                        .highestNumber(actions, PlayerKillAction.class, (playerAction -> {
+                            PlayerKillAction action = (PlayerKillAction) playerAction;
+                            if (action.getInfo() instanceof ProjectileDamageInfo) {
+                                return ((ProjectileDamageInfo) action.getInfo()).getDistance();
+                            }
+                            return 0.0;
+                        }));
+                if (distance != null && distance.intValue() > 10) {
+                    result.add(Translations.STATS_DAMAGE_KILLS_CAUSE_BOW
+                            .with(ChatColor.AQUA, new LocalizedNumber(distance, 1, 1, numStyle)));
+                }
             }
 
-            return 0.0;
-          }).sum();
-      Number highestFall = CollectionUtils
-          .highestNumber(actions, PlayerDeathByNaturalAction.class, value -> {
-            PlayerDeathByNaturalAction action = (PlayerDeathByNaturalAction) value;
-            if (action.getInfo() instanceof FallDamageInfo) {
-              return (double) ((FallDamageInfo) action.getInfo()).getFallDistance();
+            if (kills > 15) {
+                Player victim = CollectionUtils
+                        .mostCommonAttribute(actions, PlayerKillAction.class, (playerAction -> {
+                            PlayerKillAction action = (PlayerKillAction) playerAction;
+                            return action.getVictim();
+                        }));
+                if (victim != null) {
+                    int count = (int) actions.stream().filter(
+                            playerAction -> playerAction instanceof PlayerKillAction
+                                    && ((PlayerKillAction) playerAction).getVictim().equals(victim)).count();
+                    result.add(Translations.STATS_DAMAGE_KILLS_MOST
+                            .with(ChatColor.AQUA, new UnlocalizedText(victim.getDisplayName()),
+                                    new LocalizedNumber(count, numStyle)));
+                }
+            }
+        }
+
+        int killAssists = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerAssistKillAction).count();
+        if (killAssists > 0) {
+            // Weapon
+            Material weapon = CollectionUtils
+                    .mostCommonAttribute(actions, PlayerAssistKillAction.class, (playerAction -> {
+                        PlayerAssistKillAction action = (PlayerAssistKillAction) playerAction;
+                        if (action.getInfo() instanceof MeleeDamageInfo) {
+                            return ((MeleeDamageInfo) action.getInfo()).getWeapon();
+                        }
+                        return null;
+                    }));
+            result.add(Translations.STATS_DAMAGE_ASSIST_ASSISTS
+                    .with(ChatColor.AQUA, new LocalizedNumber(killAssists, numStyle)));
+            if (weapon != null && weapon != Material.AIR) {
+                result.add(Translations.STATS_DAMAGE_ASSIST_WEAPON
+                        .with(ChatColor.AQUA, weapon.name().replace("_", " ").toLowerCase()));
+            }
+        }
+
+        int deathsNatural = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerDeathByNaturalAction).count();
+        if (deathsNatural > 0) {
+            result.add(format.with(ChatColor.AQUA,
+                    Translations.STATS_DAMAGE_DEATHS_CATEGORY_NATURAL.with(ChatColor.AQUA),
+                    new LocalizedNumber(deathsNatural, numStyle)));
+            // Fall
+            Number totalFall = actions.stream()
+                    .filter(playerAction -> playerAction instanceof PlayerDeathByNaturalAction)
+                    .mapToDouble(value -> {
+                        PlayerDeathByNaturalAction action = (PlayerDeathByNaturalAction) value;
+                        if (action.getInfo() instanceof FallDamageInfo) {
+                            return (double) ((FallDamageInfo) action.getInfo()).getFallDistance();
+                        }
+
+                        return 0.0;
+                    }).sum();
+            Number highestFall = CollectionUtils
+                    .highestNumber(actions, PlayerDeathByNaturalAction.class, value -> {
+                        PlayerDeathByNaturalAction action = (PlayerDeathByNaturalAction) value;
+                        if (action.getInfo() instanceof FallDamageInfo) {
+                            return (double) ((FallDamageInfo) action.getInfo()).getFallDistance();
+                        }
+
+                        return 0.0;
+                    });
+            if (totalFall.intValue() > 20) {
+                result.add(Translations.STATS_DAMAGE_DEATHS_CAUSE_FALL_TOTAL
+                        .with(ChatColor.AQUA, new LocalizedNumber(totalFall, numStyle)));
+            }
+            if (highestFall != null && highestFall.intValue() > 30) {
+                result.add(Translations.STATS_DAMAGE_DEATHS_CAUSE_FALL_MOST
+                        .with(ChatColor.AQUA, new LocalizedNumber(highestFall, numStyle)));
+            }
+        }
+
+        int deathsSelf = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerDeathBySelfAction).count();
+        if (deathsSelf > 0) {
+            result.add(format
+                    .with(ChatColor.AQUA, Translations.STATS_DAMAGE_DEATHS_CATEGORY_SELF.with(ChatColor.AQUA),
+                            new LocalizedNumber(deathsSelf, numStyle)));
+        }
+
+        int deathsPlayer = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerDeathByPlayerAction).count();
+        if (deathsPlayer > 0) {
+            // Bow
+            Number distance = CollectionUtils
+                    .highestNumber(actions, PlayerDeathByPlayerAction.class, (playerAction -> {
+                        PlayerDeathByPlayerAction action = (PlayerDeathByPlayerAction) playerAction;
+                        if (action.getInfo() instanceof ProjectileDamageInfo) {
+                            return ((ProjectileDamageInfo) action.getInfo()).getDistance();
+                        }
+                        return 0.0;
+                    }));
+            // Weapon
+            Material weapon = CollectionUtils
+                    .mostCommonAttribute(actions, PlayerDeathByPlayerAction.class, (playerAction -> {
+                        PlayerDeathByPlayerAction action = (PlayerDeathByPlayerAction) playerAction;
+                        if (action.getInfo() instanceof MeleeDamageInfo) {
+                            return ((MeleeDamageInfo) action.getInfo()).getWeapon();
+                        }
+                        return null;
+                    }));
+            result.add(format.with(ChatColor.AQUA,
+                    Translations.STATS_DAMAGE_DEATHS_CATEGORY_PLAYER.with(ChatColor.AQUA),
+                    new LocalizedNumber(deathsPlayer, numStyle)));
+            if (weapon != null && weapon != Material.AIR) {
+                result.add(Translations.STATS_DAMAGE_KILLS_CAUSE_WEAPON
+                        .with(ChatColor.AQUA, weapon.name().replace("_", " ").toLowerCase()));
+            }
+            if (distance != null && distance.intValue() > 10) {
+                result.add(Translations.STATS_DAMAGE_DEATHS_CAUSE_BOW
+                        .with(ChatColor.AQUA, new LocalizedNumber(distance, 1, 1, numStyle)));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Get a random localized fact from a list.
+     *
+     * @param source list of facts
+     */
+    public static Localizable getRandomMatchFact(List<Localizable> source) {
+        return new UnlocalizedFormat("{0} {1}")
+                .with(Translations.STATS_FACTS_RANDOM.with(ChatColor.GOLD),
+                        source.get(random.nextInt(source.size())));
+    }
+
+    /**
+     * Get all fact data from a set of lifetimes.
+     *
+     * @param store that contains the lifetimes
+     */
+    public static List<Localizable> getMatchFacts(LifetimeStore store) {
+        return getMatchFacts(store.getPlayerLifetimes().values().stream()
+                .flatMap(lifetime -> lifetime.getActions().stream()).collect(Collectors.toList()));
+    }
+
+    /**
+     * Get all fact data from a set of lifetimes.
+     *
+     * @param actions to gather data from
+     */
+    public static List<Localizable> getMatchFacts(List<PlayerAction> actions) {
+        List<Localizable> result = new ArrayList<>();
+
+        UnlocalizedFormat combined = new UnlocalizedFormat("{0} {1}");
+
+        int kills = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerKillAction).count();
+        if (kills > 4) {
+            // Killer
+            Multiset.Entry<Player> killer = CollectionUtils
+                    .mostCommonAttributeEntry(actions, PlayerKillAction.class, (playerAction -> {
+                        PlayerKillAction action = (PlayerKillAction) playerAction;
+                        return action.getActor();
+                    }));
+            if (killer != null && killer.getElement() != null) {
+                result.add(combined.with(Translations.STATS_FACTS_KILLS_MOST_TEXT
+                        .with(ChatColor.AQUA, new UnlocalizedText(killer.getElement().getDisplayName()),
+                                new LocalizedNumber(killer.getCount())), randomTag(killMostTags)));
             }
 
-            return 0.0;
-          });
-      if (totalFall.intValue() > 20) {
-        result.add(Translations.STATS_DAMAGE_DEATHS_CAUSE_FALL_TOTAL
-            .with(ChatColor.AQUA, new LocalizedNumber(totalFall, numStyle)));
-      }
-      if (highestFall != null && highestFall.intValue() > 30) {
-        result.add(Translations.STATS_DAMAGE_DEATHS_CAUSE_FALL_MOST
-            .with(ChatColor.AQUA, new LocalizedNumber(highestFall, numStyle)));
-      }
-    }
-
-    int deathsSelf = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerDeathBySelfAction).count();
-    if (deathsSelf > 0) {
-      result.add(format
-          .with(ChatColor.AQUA, Translations.STATS_DAMAGE_DEATHS_CATEGORY_SELF.with(ChatColor.AQUA),
-              new LocalizedNumber(deathsSelf, numStyle)));
-    }
-
-    int deathsPlayer = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerDeathByPlayerAction).count();
-    if (deathsPlayer > 0) {
-      // Bow
-      Number distance = CollectionUtils
-          .highestNumber(actions, PlayerDeathByPlayerAction.class, (playerAction -> {
-            PlayerDeathByPlayerAction action = (PlayerDeathByPlayerAction) playerAction;
-            if (action.getInfo() instanceof ProjectileDamageInfo) {
-              return ((ProjectileDamageInfo) action.getInfo()).getDistance();
+            // Weapon
+            Multiset.Entry<Material> weapon = CollectionUtils
+                    .mostCommonAttributeEntry(actions, PlayerKillAction.class, (playerAction -> {
+                        PlayerKillAction action = (PlayerKillAction) playerAction;
+                        if (action.getInfo() instanceof MeleeDamageInfo) {
+                            return ((MeleeDamageInfo) action.getInfo()).getWeapon();
+                        }
+                        return null;
+                    }));
+            if (weapon != null && weapon.getElement() != null && weapon.getElement() != Material.AIR) {
+                result.add(Translations.STATS_FACTS_KILLS_WEAPON_MOST.with(ChatColor.AQUA,
+                        new UnlocalizedText(weapon.getElement().name().replace("_", " ").toLowerCase()),
+                        new LocalizedNumber(weapon.getCount())));
             }
-            return 0.0;
-          }));
-      // Weapon
-      Material weapon = CollectionUtils
-          .mostCommonAttribute(actions, PlayerDeathByPlayerAction.class, (playerAction -> {
-            PlayerDeathByPlayerAction action = (PlayerDeathByPlayerAction) playerAction;
-            if (action.getInfo() instanceof MeleeDamageInfo) {
-              return ((MeleeDamageInfo) action.getInfo()).getWeapon();
+
+            // Bow
+            Function<PlayerAction, Number> distanceFunc = (playerAction -> {
+                PlayerKillAction action = (PlayerKillAction) playerAction;
+                if (action.getInfo() instanceof ProjectileDamageInfo) {
+                    return ((ProjectileDamageInfo) action.getInfo()).getDistance();
+                }
+                return 0.0;
+            });
+            PlayerAction longest = CollectionUtils
+                    .highestNumberObject(actions, PlayerKillAction.class, distanceFunc);
+            if (longest != null) {
+                Number distance = distanceFunc.apply(longest);
+                if (distance != null && distance.intValue() > 10) {
+                    result.add(combined.with(Translations.STATS_FACTS_SNIPE_TEXT
+                            .with(ChatColor.AQUA, new UnlocalizedText(longest.getActor().getDisplayName()),
+                                    new LocalizedNumber(distance, 1, 1, numStyle)), randomTag(snipeTags)));
+                }
             }
-            return null;
-          }));
-      result.add(format.with(ChatColor.AQUA,
-          Translations.STATS_DAMAGE_DEATHS_CATEGORY_PLAYER.with(ChatColor.AQUA),
-          new LocalizedNumber(deathsPlayer, numStyle)));
-      if (weapon != null && weapon != Material.AIR) {
-        result.add(Translations.STATS_DAMAGE_KILLS_CAUSE_WEAPON
-            .with(ChatColor.AQUA, weapon.name().replace("_", " ").toLowerCase()));
-      }
-      if (distance != null && distance.intValue() > 10) {
-        result.add(Translations.STATS_DAMAGE_DEATHS_CAUSE_BOW
-            .with(ChatColor.AQUA, new LocalizedNumber(distance, 1, 1, numStyle)));
-      }
-    }
+        }
 
-    return result;
-  }
-
-  /**
-   * Get a random localized fact from a list.
-   *
-   * @param source list of facts
-   */
-  public static Localizable getRandomMatchFact(List<Localizable> source) {
-    return new UnlocalizedFormat("{0} {1}")
-        .with(Translations.STATS_FACTS_RANDOM.with(ChatColor.GOLD),
-            source.get(random.nextInt(source.size())));
-  }
-
-  /**
-   * Get all fact data from a set of lifetimes.
-   *
-   * @param store that contains the lifetimes
-   */
-  public static List<Localizable> getMatchFacts(LifetimeStore store) {
-    return getMatchFacts(store.getPlayerLifetimes().values().stream()
-        .flatMap(lifetime -> lifetime.getActions().stream()).collect(Collectors.toList()));
-  }
-
-  /**
-   * Get all fact data from a set of lifetimes.
-
-   * @param actions to gather data from
-   */
-  public static List<Localizable> getMatchFacts(List<PlayerAction> actions) {
-    List<Localizable> result = new ArrayList<>();
-
-    UnlocalizedFormat combined = new UnlocalizedFormat("{0} {1}");
-
-    int kills = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerKillAction).count();
-    if (kills > 4) {
-      // Killer
-      Multiset.Entry<Player> killer = CollectionUtils
-          .mostCommonAttributeEntry(actions, PlayerKillAction.class, (playerAction -> {
-            PlayerKillAction action = (PlayerKillAction) playerAction;
-            return action.getActor();
-          }));
-      if (killer != null && killer.getElement() != null) {
-        result.add(combined.with(Translations.STATS_FACTS_KILLS_MOST_TEXT
-            .with(ChatColor.AQUA, new UnlocalizedText(killer.getElement().getDisplayName()),
-                new LocalizedNumber(killer.getCount())), randomTag(killMostTags)));
-      }
-
-      // Weapon
-      Multiset.Entry<Material> weapon = CollectionUtils
-          .mostCommonAttributeEntry(actions, PlayerKillAction.class, (playerAction -> {
-            PlayerKillAction action = (PlayerKillAction) playerAction;
-            if (action.getInfo() instanceof MeleeDamageInfo) {
-              return ((MeleeDamageInfo) action.getInfo()).getWeapon();
+        int killAssists = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerAssistKillAction).count();
+        if (killAssists > 4) {
+            // Helpful
+            Multiset.Entry<Player> helpful = CollectionUtils
+                    .mostCommonAttributeEntry(actions, PlayerAssistKillAction.class, (playerAction -> {
+                        PlayerAssistKillAction action = (PlayerAssistKillAction) playerAction;
+                        return action.getActor();
+                    }));
+            if (helpful != null) {
+                result.add(combined.with(Translations.STATS_FACTS_KILLS_ASSISTS_HIGHEST
+                        .with(ChatColor.AQUA, new UnlocalizedText(helpful.getElement().getDisplayName()),
+                                new LocalizedNumber(helpful.getCount())), randomTag(killAssistTags)));
             }
-            return null;
-          }));
-      if (weapon != null && weapon.getElement() != null && weapon.getElement() != Material.AIR) {
-        result.add(Translations.STATS_FACTS_KILLS_WEAPON_MOST.with(ChatColor.AQUA,
-            new UnlocalizedText(weapon.getElement().name().replace("_", " ").toLowerCase()),
-            new LocalizedNumber(weapon.getCount())));
-      }
-
-      // Bow
-      Function<PlayerAction, Number> distanceFunc = (playerAction -> {
-        PlayerKillAction action = (PlayerKillAction) playerAction;
-        if (action.getInfo() instanceof ProjectileDamageInfo) {
-          return ((ProjectileDamageInfo) action.getInfo()).getDistance();
-        }
-        return 0.0;
-      });
-      PlayerAction longest = CollectionUtils
-          .highestNumberObject(actions, PlayerKillAction.class, distanceFunc);
-      if (longest != null) {
-        Number distance = distanceFunc.apply(longest);
-        if (distance != null && distance.intValue() > 10) {
-          result.add(combined.with(Translations.STATS_FACTS_SNIPE_TEXT
-              .with(ChatColor.AQUA, new UnlocalizedText(longest.getActor().getDisplayName()),
-                  new LocalizedNumber(distance, 1, 1, numStyle)), randomTag(snipeTags)));
-        }
-      }
-    }
-
-    int killAssists = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerAssistKillAction).count();
-    if (killAssists > 4) {
-      // Helpful
-      Multiset.Entry<Player> helpful = CollectionUtils
-          .mostCommonAttributeEntry(actions, PlayerAssistKillAction.class, (playerAction -> {
-            PlayerAssistKillAction action = (PlayerAssistKillAction) playerAction;
-            return action.getActor();
-          }));
-      if (helpful != null) {
-        result.add(combined.with(Translations.STATS_FACTS_KILLS_ASSISTS_HIGHEST
-            .with(ChatColor.AQUA, new UnlocalizedText(helpful.getElement().getDisplayName()),
-                new LocalizedNumber(helpful.getCount())), randomTag(killAssistTags)));
-      }
-    }
-
-    int deaths = (int) actions.stream()
-        .filter(playerAction -> playerAction instanceof PlayerDeathByNaturalAction).count();
-    if (deaths > 5) {
-      Function<PlayerAction, Number> fallFunc = value -> {
-        PlayerDeathByNaturalAction action = (PlayerDeathByNaturalAction) value;
-        if (action.getInfo() instanceof FallDamageInfo) {
-          return (double) ((FallDamageInfo) action.getInfo()).getFallDistance();
         }
 
-        return 0.0;
-      };
-      PlayerAction highestFall = CollectionUtils
-          .highestNumberObject(actions, PlayerDeathByNaturalAction.class, fallFunc);
-      if (highestFall != null) {
-        Number distance = fallFunc.apply(highestFall);
-        if (distance.intValue() > 30) {
-          result.add(combined.with(Translations.STATS_FACTS_FALL_TEXT
-              .with(ChatColor.AQUA, new UnlocalizedText(highestFall.getActor().getDisplayName()),
-                  new LocalizedNumber(distance, numStyle)), randomTag(fallTags)));
+        int deaths = (int) actions.stream()
+                .filter(playerAction -> playerAction instanceof PlayerDeathByNaturalAction).count();
+        if (deaths > 5) {
+            Function<PlayerAction, Number> fallFunc = value -> {
+                PlayerDeathByNaturalAction action = (PlayerDeathByNaturalAction) value;
+                if (action.getInfo() instanceof FallDamageInfo) {
+                    return (double) ((FallDamageInfo) action.getInfo()).getFallDistance();
+                }
+
+                return 0.0;
+            };
+            PlayerAction highestFall = CollectionUtils
+                    .highestNumberObject(actions, PlayerDeathByNaturalAction.class, fallFunc);
+            if (highestFall != null) {
+                Number distance = fallFunc.apply(highestFall);
+                if (distance.intValue() > 30) {
+                    result.add(combined.with(Translations.STATS_FACTS_FALL_TEXT
+                            .with(ChatColor.AQUA, new UnlocalizedText(highestFall.getActor().getDisplayName()),
+                                    new LocalizedNumber(distance, numStyle)), randomTag(fallTags)));
+                }
+            }
         }
-      }
-    }
 
-    if (result.isEmpty()) {
-      result.add(Translations.STATS_FACTS_ERROR_NONE.with(ChatColor.RED));
-    }
-
-    return result;
-  }
-
-  /**
-   * Get information regarding actions related to objectives inside of a lifetime.
-   *
-   * @param lifetime that contains the actions
-   * @param sender who is viewing the message
-   */
-  public static List<Localizable> getObjectiveDisplay(PlayerLifetime lifetime,
-      CommandSender sender) {
-    ArrayListMultimap<Objective, ObjectiveAction> map = ArrayListMultimap.create();
-    lifetime.getActions().stream().filter(playerAction -> playerAction instanceof ObjectiveAction)
-        .forEach(
-            action -> map.put(((ObjectiveAction) action).getActed(), (ObjectiveAction) action));
-
-    return getObjectiveDisplay(map, sender);
-  }
-
-  /**
-   * Get information regarding actions related to objectives inside of all lifetimes related to a UUID.
-   *
-   * @param store that contains the lifetimes
-   * @param uuid to filter lifetimes by
-   * @param sender who is viewing the message
-   */
-  public static List<Localizable> getObjectiveDisplay(LifetimeStore store, UUID uuid,
-      CommandSender sender) {
-    ArrayListMultimap<Objective, ObjectiveAction> map = ArrayListMultimap.create();
-    for (PlayerLifetime lifetime : store.getPlayerLifetimes().get(uuid)) {
-      lifetime.getActions().stream().filter(playerAction -> playerAction instanceof ObjectiveAction)
-          .forEach(action -> {
-            map.put(((ObjectiveAction) action).getActed(), (ObjectiveAction) action);
-          });
-    }
-
-    return getObjectiveDisplay(map, sender);
-  }
-
-  /**
-   * Get all information gathered from the supplied actions for each objective.
-   *
-   * @param map of objectives -> objective actions
-   * @param sender who is viewing the message
-\   */
-  public static List<Localizable> getObjectiveDisplay(
-      ArrayListMultimap<Objective, ObjectiveAction> map, CommandSender sender) {
-    List<Localizable> result = new ArrayList<>();
-
-    map.keySet().forEach(objective -> {
-      String name = objective.getName(sender);
-      HashMap<Class, List<ObjectiveAction>> actionsByType = new HashMap<>();
-      for (ObjectiveAction action : map.get(objective)) {
-        actionsByType.putIfAbsent(action.getClass(), new ArrayList<>());
-        actionsByType.get(action.getClass()).add(action);
-      }
-      actionsByType.values().forEach(actions -> {
-        boolean plural = actions.size() > 1;
-        LocalizedFormat message = actions.get(0).actionMessage(plural);
-        if (plural) {
-          result.add(message.with(ChatColor.GREEN, new UnlocalizedText(name),
-              new LocalizedNumber(actions.size(), numStyle)));
-        } else {
-          result.add(message.with(ChatColor.AQUA, new UnlocalizedText(name)));
+        if (result.isEmpty()) {
+            result.add(Translations.STATS_FACTS_ERROR_NONE.with(ChatColor.RED));
         }
-      });
-    });
 
-    return result;
-  }
+        return result;
+    }
+
+    /**
+     * Get information regarding actions related to objectives inside of a lifetime.
+     *
+     * @param lifetime that contains the actions
+     * @param sender   who is viewing the message
+     */
+    public static List<Localizable> getObjectiveDisplay(PlayerLifetime lifetime,
+                                                        CommandSender sender) {
+        ArrayListMultimap<Objective, ObjectiveAction> map = ArrayListMultimap.create();
+        lifetime.getActions().stream().filter(playerAction -> playerAction instanceof ObjectiveAction)
+                .forEach(
+                        action -> map.put(((ObjectiveAction) action).getActed(), (ObjectiveAction) action));
+
+        return getObjectiveDisplay(map, sender);
+    }
+
+    /**
+     * Get information regarding actions related to objectives inside of all lifetimes related to a UUID.
+     *
+     * @param store  that contains the lifetimes
+     * @param uuid   to filter lifetimes by
+     * @param sender who is viewing the message
+     */
+    public static List<Localizable> getObjectiveDisplay(LifetimeStore store, UUID uuid,
+                                                        CommandSender sender) {
+        ArrayListMultimap<Objective, ObjectiveAction> map = ArrayListMultimap.create();
+        for (PlayerLifetime lifetime : store.getPlayerLifetimes().get(uuid)) {
+            lifetime.getActions().stream().filter(playerAction -> playerAction instanceof ObjectiveAction)
+                    .forEach(action -> {
+                        map.put(((ObjectiveAction) action).getActed(), (ObjectiveAction) action);
+                    });
+        }
+
+        return getObjectiveDisplay(map, sender);
+    }
+
+    /**
+     * Get all information gathered from the supplied actions for each objective.
+     *
+     * @param map    of objectives -> objective actions
+     * @param sender who is viewing the message
+     *               \
+     */
+    public static List<Localizable> getObjectiveDisplay(
+            ArrayListMultimap<Objective, ObjectiveAction> map, CommandSender sender) {
+        List<Localizable> result = new ArrayList<>();
+
+        map.keySet().forEach(objective -> {
+            String name = objective.getName(sender);
+            HashMap<Class, List<ObjectiveAction>> actionsByType = new HashMap<>();
+            for (ObjectiveAction action : map.get(objective)) {
+                actionsByType.putIfAbsent(action.getClass(), new ArrayList<>());
+                actionsByType.get(action.getClass()).add(action);
+            }
+            actionsByType.values().forEach(actions -> {
+                boolean plural = actions.size() > 1;
+                LocalizedFormat message = actions.get(0).actionMessage(plural);
+                if (plural) {
+                    result.add(message.with(ChatColor.GREEN, new UnlocalizedText(name),
+                            new LocalizedNumber(actions.size(), numStyle)));
+                } else {
+                    result.add(message.with(ChatColor.AQUA, new UnlocalizedText(name)));
+                }
+            });
+        });
+
+        return result;
+    }
 }

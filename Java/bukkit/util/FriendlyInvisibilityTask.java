@@ -1,3 +1,11 @@
+/*
+The code contained in this file is provided without warranty, it was likely grabbed from a closed-source/abandoned
+project and will in most cases not function out of the box. This file is merely intended as a representation of the
+design pasterns and different problem-solving approaches I use to tackle various problems.
+
+The original file can be found here: https://github.com/Avicus/AvicusNetwork
+*/
+
 package net.avicus.atlas.module.display;
 
 import java.util.HashMap;
@@ -7,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+
 import net.avicus.atlas.event.group.PlayerChangedGroupEvent;
 import net.avicus.atlas.match.Match;
 import net.avicus.atlas.module.groups.Competitor;
@@ -25,168 +34,168 @@ import org.bukkit.scoreboard.Team;
 
 public class FriendlyInvisibilityTask extends AtlasTask implements Listener {
 
-  public final DisplayModule display;
-  private final GroupsModule groups;
-  // Mapping of player with random integer for team identification.
-  private HashMap<Player, String> potionInvisibles = new HashMap<>();
-  private HashMap<Player, Set<Player>> playersCantSee = new HashMap<>();
+    public final DisplayModule display;
+    private final GroupsModule groups;
+    // Mapping of player with random integer for team identification.
+    private HashMap<Player, String> potionInvisibles = new HashMap<>();
+    private HashMap<Player, Set<Player>> playersCantSee = new HashMap<>();
 
-  public FriendlyInvisibilityTask(Match match, DisplayModule display) {
-    super();
-    this.groups = match.getRequiredModule(GroupsModule.class);
-    this.display = display;
-  }
+    public FriendlyInvisibilityTask(Match match, DisplayModule display) {
+        super();
+        this.groups = match.getRequiredModule(GroupsModule.class);
+        this.display = display;
+    }
 
-  @Override
-  public void run() {
-    execute();
-  }
+    @Override
+    public void run() {
+        execute();
+    }
 
-  public FriendlyInvisibilityTask start() {
-    this.repeat(0, 20);
-    return this;
-  }
+    public FriendlyInvisibilityTask start() {
+        this.repeat(0, 20);
+        return this;
+    }
 
-  public void execute() {
-    for (Player viewer : Bukkit.getOnlinePlayers()) {
-      if (groups.getGroup(viewer).isObserving()) {
-        continue;
-      }
+    public void execute() {
+        for (Player viewer : Bukkit.getOnlinePlayers()) {
+            if (groups.getGroup(viewer).isObserving()) {
+                continue;
+            }
 
-      if (!this.playersCantSee.containsKey(viewer)) {
-        this.playersCantSee.put(viewer, new HashSet<>());
-      }
+            if (!this.playersCantSee.containsKey(viewer)) {
+                this.playersCantSee.put(viewer, new HashSet<>());
+            }
 
-      Set<Player> shouldHide = this.playersCantSee.get(viewer);
-      for (Player player : Bukkit.getOnlinePlayers()) {
-        if (groups.getGroup(player).isObserving()) {
-          continue;
+            Set<Player> shouldHide = this.playersCantSee.get(viewer);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (groups.getGroup(player).isObserving()) {
+                    continue;
+                }
+
+                if (shouldSee(viewer, player)) {
+                    shouldHide.remove(player);
+                } else {
+                    shouldHide.add(player);
+                }
+            }
         }
 
-        if (shouldSee(viewer, player)) {
-          shouldHide.remove(player);
-        } else {
-          shouldHide.add(player);
-        }
-      }
-    }
+        for (Map.Entry<Player, Set<Player>> entry : this.playersCantSee.entrySet()) {
+            Player viewer = entry.getKey();
 
-    for (Map.Entry<Player, Set<Player>> entry : this.playersCantSee.entrySet()) {
-      Player viewer = entry.getKey();
+            Set<Player> hidden = entry.getValue();
 
-      Set<Player> hidden = entry.getValue();
+            Iterator<Player> iterator = hidden.iterator();
 
-      Iterator<Player> iterator = hidden.iterator();
+            while (iterator.hasNext()) {
+                Player hide = iterator.next();
 
-      while (iterator.hasNext()) {
-        Player hide = iterator.next();
+                if (!hide.isOnline() || groups.getGroup(hide).isObserving()) {
+                    // This means a player has since become an observer/left.
+                    iterator.remove();
+                    continue;
+                }
 
-        if (!hide.isOnline() || groups.getGroup(hide).isObserving()) {
-          // This means a player has since become an observer/left.
-          iterator.remove();
-          continue;
+                constructTeam(viewer.getScoreboard(), hide);
+            }
         }
 
-        constructTeam(viewer.getScoreboard(), hide);
-      }
+        Set<Player> allHidden = getAllHidden();
+
+        // Reset all players who have since become visible.
+        for (Player viewer : Bukkit.getOnlinePlayers()) {
+            for (Player target : Bukkit.getOnlinePlayers()) {
+                if (viewer.equals(target)) {
+                    continue;
+                }
+
+                resetIfHadInvis(viewer, target, allHidden);
+            }
+        }
     }
 
-    Set<Player> allHidden = getAllHidden();
+    private Set<Player> getAllHidden() {
+        Set<Player> allHidden = new HashSet<>();
 
-    // Reset all players who have since become visible.
-    for (Player viewer : Bukkit.getOnlinePlayers()) {
-      for (Player target : Bukkit.getOnlinePlayers()) {
-        if (viewer.equals(target)) {
-          continue;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (groups.getGroup(player).isObserving()) {
+                continue;
+            }
+
+            if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                continue;
+            }
+
+            allHidden.add(player);
+        }
+        return allHidden;
+    }
+
+    private Team constructTeam(Scoreboard board, Player toAdd) {
+        if (!this.potionInvisibles.containsKey(toAdd)) {
+            this.potionInvisibles.put(toAdd, UUID.randomUUID().toString().substring(0, 8));
         }
 
-        resetIfHadInvis(viewer, target, allHidden);
-      }
-    }
-  }
+        String teamName = "inv-" + this.potionInvisibles.get(toAdd);
 
-  private Set<Player> getAllHidden() {
-    Set<Player> allHidden = new HashSet<>();
+        Team team = board.getTeam(teamName);
 
-    for (Player player : Bukkit.getOnlinePlayers()) {
-      if (groups.getGroup(player).isObserving()) {
-        continue;
-      }
-
-      if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-        continue;
-      }
-
-      allHidden.add(player);
-    }
-    return allHidden;
-  }
-
-  private Team constructTeam(Scoreboard board, Player toAdd) {
-    if (!this.potionInvisibles.containsKey(toAdd)) {
-      this.potionInvisibles.put(toAdd, UUID.randomUUID().toString().substring(0, 8));
+        if (team == null) {
+            team = board.registerNewTeam(teamName);
+            team.setPrefix(this.groups.getGroup(toAdd).getChatColor() + "");
+            team.setNameTagVisibility(NameTagVisibility.HIDE_FOR_OTHER_TEAMS);
+            team.setCanSeeFriendlyInvisibles(true);
+            team.addEntry(toAdd.getName());
+        }
+        return team;
     }
 
-    String teamName = "inv-" + this.potionInvisibles.get(toAdd);
-
-    Team team = board.getTeam(teamName);
-
-    if (team == null) {
-      team = board.registerNewTeam(teamName);
-      team.setPrefix(this.groups.getGroup(toAdd).getChatColor() + "");
-      team.setNameTagVisibility(NameTagVisibility.HIDE_FOR_OTHER_TEAMS);
-      team.setCanSeeFriendlyInvisibles(true);
-      team.addEntry(toAdd.getName());
-    }
-    return team;
-  }
-
-  private void resetIfHadInvis(Player player, Player target, Set<Player> hidden) {
-    if (hidden.contains(target)) {
-      return;
-    }
-
-    Team team = player.getScoreboard().getTeam("inv-" + this.potionInvisibles.get(target));
-    if (team != null) {
-      for (String entry : team.getEntries()) {
-        Player match = Bukkit.getPlayer(entry);
-
-        if (entry == null) {
-          continue;
+    private void resetIfHadInvis(Player player, Player target, Set<Player> hidden) {
+        if (hidden.contains(target)) {
+            return;
         }
 
-        Optional<Competitor> competitor = groups.getCompetitorOf(match);
+        Team team = player.getScoreboard().getTeam("inv-" + this.potionInvisibles.get(target));
+        if (team != null) {
+            for (String entry : team.getEntries()) {
+                Player match = Bukkit.getPlayer(entry);
 
-        if (!competitor.isPresent()) {
-          continue;
+                if (entry == null) {
+                    continue;
+                }
+
+                Optional<Competitor> competitor = groups.getCompetitorOf(match);
+
+                if (!competitor.isPresent()) {
+                    continue;
+                }
+
+                Team found = player.getScoreboard().getTeam(competitor.get().getId());
+
+                if (found == null) {
+                    continue;
+                }
+
+                found.addEntry(entry);
+            }
+
+            team.unregister();
         }
-
-        Team found = player.getScoreboard().getTeam(competitor.get().getId());
-
-        if (found == null) {
-          continue;
-        }
-
-        found.addEntry(entry);
-      }
-
-      team.unregister();
     }
-  }
 
-  private boolean shouldSee(Player player, Player target) {
-    Group targetGroup = this.groups.getGroup(target);
+    private boolean shouldSee(Player player, Player target) {
+        Group targetGroup = this.groups.getGroup(target);
 
-    return targetGroup.isMember(player) || !target.hasPotionEffect(PotionEffectType.INVISIBILITY);
-  }
+        return targetGroup.isMember(player) || !target.hasPotionEffect(PotionEffectType.INVISIBILITY);
+    }
 
-  @EventHandler
-  public void onChangeGroup(PlayerChangedGroupEvent event) {
-    this.playersCantSee.remove(event.getPlayer());
-  }
+    @EventHandler
+    public void onChangeGroup(PlayerChangedGroupEvent event) {
+        this.playersCantSee.remove(event.getPlayer());
+    }
 
-  @EventHandler
-  public void onLeave(PlayerQuitEvent event) {
-    this.playersCantSee.remove(event.getPlayer());
-  }
+    @EventHandler
+    public void onLeave(PlayerQuitEvent event) {
+        this.playersCantSee.remove(event.getPlayer());
+    }
 }

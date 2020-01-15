@@ -1,6 +1,15 @@
+/*
+The code contained in this file is provided without warranty, it was likely grabbed from a closed-source/abandoned
+project and will in most cases not function out of the box. This file is merely intended as a representation of the
+design pasterns and different problem-solving approaches I use to tackle various problems.
+
+The original file can be found here: https://github.com/Avicus/AvicusNetwork
+*/
+
 package net.avicus.atlas.fun;
 
 import java.util.Random;
+
 import net.avicus.atlas.Atlas;
 import net.avicus.atlas.util.AtlasTask;
 import net.md_5.bungee.api.ChatColor;
@@ -16,72 +25,72 @@ import org.github.paperspigot.Title;
 
 public class Friday13 implements Listener {
 
-  private static final Random RANDOM = new Random();
-  private final Atlas atlas;
+    private static final Random RANDOM = new Random();
+    private final Atlas atlas;
 
-  public Friday13(Atlas atlas) {
-    this.atlas = atlas;
-    startTask();
-  }
+    public Friday13(Atlas atlas) {
+        this.atlas = atlas;
+        startTask();
+    }
 
-  private void startTask() {
-    AtlasTask.of(() -> {
-      if (RANDOM.nextBoolean()) {
-        return;
-      }
+    private void startTask() {
+        AtlasTask.of(() -> {
+            if (RANDOM.nextBoolean()) {
+                return;
+            }
 
-      TextComponent message = new TextComponent("HAPPY FRIDAY THE 13TH!");
-      message.setColor(ChatColor.GOLD);
+            TextComponent message = new TextComponent("HAPPY FRIDAY THE 13TH!");
+            message.setColor(ChatColor.GOLD);
 
-      Bukkit.getOnlinePlayers().forEach(p -> {
-        if (RANDOM.nextBoolean()) {
-          return;
-        }
+            Bukkit.getOnlinePlayers().forEach(p -> {
+                if (RANDOM.nextBoolean()) {
+                    return;
+                }
 
-        if (RANDOM.nextBoolean()) {
-          p.setVelocity(new Vector(0, 0.3 + RANDOM.nextDouble(), 0));
-        }
+                if (RANDOM.nextBoolean()) {
+                    p.setVelocity(new Vector(0, 0.3 + RANDOM.nextDouble(), 0));
+                }
 
-        if (RANDOM.nextBoolean()) {
-          p.playSound(p.getLocation(), Sound.AMBIENCE_CAVE, .5f, 1f);
-        }
+                if (RANDOM.nextBoolean()) {
+                    p.playSound(p.getLocation(), Sound.AMBIENCE_CAVE, .5f, 1f);
+                }
 
-        p.sendTitle(new Title(message, new TextComponent(), 2, 5, 2));
+                p.sendTitle(new Title(message, new TextComponent(), 2, 5, 2));
 
-        if (RANDOM.nextBoolean()) {
-          p.getWorld().strikeLightningEffect(p.getLocation());
-        }
+                if (RANDOM.nextBoolean()) {
+                    p.getWorld().strikeLightningEffect(p.getLocation());
+                }
+
+                AtlasTask.of(() -> {
+                    if (RANDOM.nextBoolean()) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 40, 1));
+                    } else if (RANDOM.nextBoolean()) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
+                    } else {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10, 1));
+                    }
+                }).now();
+            });
+        }).repeatAsync(0, 90 * 20);
 
         AtlasTask.of(() -> {
-          if (RANDOM.nextBoolean()) {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 40, 1));
-          } else if (RANDOM.nextBoolean()) {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
-          } else {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10, 1));
-          }
-        }).now();
-      });
-    }).repeatAsync(0, 90 * 20);
+            if (RANDOM.nextBoolean()) {
+                return;
+            }
 
-    AtlasTask.of(() -> {
-      if (RANDOM.nextBoolean()) {
-        return;
-      }
+            World match = this.atlas.getMatchManager().getRotation().getMatch().getWorld();
 
-      World match = this.atlas.getMatchManager().getRotation().getMatch().getWorld();
+            long time = match.getTime();
+            match.setTime(18000);
 
-      long time = match.getTime();
-      match.setTime(18000);
-
-      Bukkit.getOnlinePlayers().forEach(p -> {
-        if (RANDOM.nextBoolean()) {
-          p.getWorld().strikeLightningEffect(p.getLocation());
-        }
-      });
-      match.setTime(time);
-    }).repeatAsync(0, 120 * 20);
-  }
+            Bukkit.getOnlinePlayers().forEach(p -> {
+                if (RANDOM.nextBoolean()) {
+                    p.getWorld().strikeLightningEffect(p.getLocation());
+                }
+            });
+            match.setTime(time);
+        }).repeatAsync(0, 120 * 20);
+    }
 
 
 }

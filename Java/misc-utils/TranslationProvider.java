@@ -1,12 +1,22 @@
+/*
+The code contained in this file is provided without warranty, it was likely grabbed from a closed-source/abandoned
+project and will in most cases not function out of the box. This file is merely intended as a representation of the
+design pasterns and different problem-solving approaches I use to tackle various problems.
+
+The original file can be found here: https://github.com/Avicus/AvicusNetwork
+*/
+
 package net.avicus.magma.util;
 
 import com.google.common.base.Joiner;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.avicus.compendium.locale.LocaleBundle;
 import net.avicus.compendium.locale.LocaleStrings;
 import net.avicus.compendium.locale.text.LocalizedFormat;
@@ -15,50 +25,50 @@ import org.jdom2.JDOMException;
 
 public class TranslationProvider {
 
-  public static final LocalizedFormat $NULL$ = new LocalizedFormat(null, null);
-  private static final Field MODIFIERS_FIELD;
-  private static final Joiner JOINER = Joiner.on(".");
+    public static final LocalizedFormat $NULL$ = new LocalizedFormat(null, null);
+    private static final Field MODIFIERS_FIELD;
+    private static final Joiner JOINER = Joiner.on(".");
 
-  static {
-    try {
-      MODIFIERS_FIELD = Field.class.getDeclaredField("modifiers");
-      MODIFIERS_FIELD.setAccessible(true);
-    } catch (NoSuchFieldException e) {
-      throw new ExceptionInInitializerError(e);
-    }
-  }
-
-  public static void map(Class<?> clazz, LocaleBundle bundle) {
-    try {
-      for (Field field : clazz.getFields()) {
-        field.setAccessible(true);
-        MODIFIERS_FIELD.set(field, field.getModifiers() & ~Modifier.FINAL);
-        if (field.get(null) == $NULL$) {
-          field.set(null, bundle.getFormat(JOINER.join(field.getName().toLowerCase().split("_"))));
+    static {
+        try {
+            MODIFIERS_FIELD = Field.class.getDeclaredField("modifiers");
+            MODIFIERS_FIELD.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            throw new ExceptionInInitializerError(e);
         }
-      }
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
     }
-  }
 
-  public static LocaleBundle loadBundle(Plugin plugin, String... locales) {
-    try {
-      final List<LocaleStrings> list = new ArrayList<>();
-      final LocaleStrings english = getLocaleStrings(plugin, "locale/en_US.xml");
-      for (String locale : locales) {
-        list.add(getLocaleStrings(plugin, String.format("locale/%s.xml", locale)));
-      }
-      return new LocaleBundle(list, english);
-    } catch (Exception e) {
-      throw new IllegalStateException("Failed to load translations", e);
+    public static void map(Class<?> clazz, LocaleBundle bundle) {
+        try {
+            for (Field field : clazz.getFields()) {
+                field.setAccessible(true);
+                MODIFIERS_FIELD.set(field, field.getModifiers() & ~Modifier.FINAL);
+                if (field.get(null) == $NULL$) {
+                    field.set(null, bundle.getFormat(JOINER.join(field.getName().toLowerCase().split("_"))));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
-  }
 
-  private static LocaleStrings getLocaleStrings(Plugin plugin, String resource)
-      throws JDOMException, IOException {
-    try (InputStream input = plugin.getResource(resource)) {
-      return LocaleStrings.fromXml(input);
+    public static LocaleBundle loadBundle(Plugin plugin, String... locales) {
+        try {
+            final List<LocaleStrings> list = new ArrayList<>();
+            final LocaleStrings english = getLocaleStrings(plugin, "locale/en_US.xml");
+            for (String locale : locales) {
+                list.add(getLocaleStrings(plugin, String.format("locale/%s.xml", locale)));
+            }
+            return new LocaleBundle(list, english);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to load translations", e);
+        }
     }
-  }
+
+    private static LocaleStrings getLocaleStrings(Plugin plugin, String resource)
+            throws JDOMException, IOException {
+        try (InputStream input = plugin.getResource(resource)) {
+            return LocaleStrings.fromXml(input);
+        }
+    }
 }

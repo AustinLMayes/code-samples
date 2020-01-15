@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9c195aa1-303e-4682-89aa-36a66d88a308" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Java/src/external/ComponentClassLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Java/src/external/ComponentDescriptionFile.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Java/src/external/ComponentLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Java/src/external/ExternalComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/ActionStore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/ScoreUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/base/Action.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/base/CompetitorAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/base/PlayerAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/lifetime/LifetimeDisplayUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/lifetime/LifetimeStore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/lifetime/type/CompetitorLifetime.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/lifetime/type/PlayerLifetime.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/ObjectiveAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/competitor/CompetitorCompleteObjectiveAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/competitor/CompetitorInteractWithObjectiveAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/competitor/CompetitorTouchObjectiveAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/player/PlayerCompleteObjectiveAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/player/PlayerInteractWithObjectiveAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/player/PlayerTouchObjectiveAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/score/PlayerEarnPointAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/action/objective/score/ScoreAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/chat/filter/ChatFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/chat/filter/IPFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/chat/filter/WordFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/command/DevCommands.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/cooldown/CooldownTracker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/cooldown/ObjectCooledEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/executor/ExecutionDispatch.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/executor/ExecutionListenerRegistration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/executor/ExecutorCollection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/freeze/FreezeModule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/freeze/FreezeStand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/ModifyDamageModule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/ScoreZone.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/SpawnListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/carts/CartsFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/carts/CartsModule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/destroyable/DestroyableEventInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/destroyable/DestroyableObjective.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/destroyable/DestroyablePhase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/destroyable/LeakableObjective.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/destroyable/MonumentObjective.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/entity/EntityFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/entity/EntityListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/entity/EntityObjective.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/flag/FlagFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/flag/FlagHighlightTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/flag/FlagObjective.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/hill/HillCaptureRule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/hill/HillFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/hill/HillObjective.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/hill/HillTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/loadout/CompassLoadout.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/loadout/EffectLoadout.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/loadout/GameModeLoadout.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/loadout/PopulatorLoadout.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/loadout/VehicleLoadout.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/games/walls/WallFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/AFKKickTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/AtlasQuickPlayComponent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/CompetitiveTypeDetector.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/CompetitveRenderer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/Friday13.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/FriendSessionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/MapNotificationComponent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/MatchFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/ScopableItemStack.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/TabListComponent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/XPLeaderboardTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/github/GitHubMapLibrary.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/misc/github/GitHubMapSource.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/populators/OnlyCavesOrePopulator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/sound/SoundContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/sound/SoundGadget.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/sound/SoundManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/AFKKickTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/DeathMessage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/EnderChestStore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/FakeBlockState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/FireworkSpawnTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/FriendlyInvisibilityTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/GeneratorSettingsBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/ItemStackBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/PersistenceListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/PlayerUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/docs/GenerationUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/docs/HTMLUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/generator/ChestGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/generator/ChestRegenerateTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/tag/CombatLoggerState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/tag/LoggerNPCManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bukkit/util/tag/PlayerState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/bungee/StatusCheckTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/polling/DiscussionPollingService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/polling/PollingService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/polling/PrestigeLevelPollingService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/utils/ChannelUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/utils/DiscordLoggingUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/utils/UserUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/utils/logging/DiscordExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/discord/utils/logging/DiscordLogHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/FeatureDocumentation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/InfoTable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/ModuleDocumentation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/SpecInformation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/attributes/Attribute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/attributes/Attributes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/attributes/EnumAttribute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/attributes/GenericAttribute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/attributes/LinkedAttribute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/documentation/attributes/RangeAttribute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/external/ModuleSet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/external/SetClassLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/external/SetDescriptionFile.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/external/SetLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/CollectionUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/FileBackedKVSet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/HTMLUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/TranslationProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/Version.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/k8s/PodTemplate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/k8s/ResourceTemplate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/k8s/ServiceTemplate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/conditionals/Conditional.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/conditionals/ConditionalContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/conditionals/ConditionalsFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/conditionals/type/ConfigValueConditional.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/conditionals/type/DateConditional.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/groups/ModuleGroup.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/groups/ModuleGroupsFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/named/NamedParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/misc-utils/xml/named/NamedParsers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/redis/AsyncRedisHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/redis/Redis.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/redis/RedisHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/redis/RedisListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/redis/RedisMessage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/teamspeak/client/Clients.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/teamspeak/temp/TemporaryChannels.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/teamspeak/temp/packages/ExtensionPackage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/teamspeak/temp/packages/InitialPackage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java/teamspeak/temp/packages/Package.java" beforeDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/k8s/PodTemplate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/k8s/ResourceTemplate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/k8s/ServiceTemplate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/FileBackedKVSet.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#4075#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/HTMLUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/TranslationProvider.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-84">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Java/src/teamspeak/temp/TemporaryChannels.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2589">
+              <caret line="5" column="27" selection-start-line="5" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/discord/utils/UserUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" column="37" selection-start-line="5" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/xml/conditionals/type/ConfigValueConditional.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret lean-forward="true" />
+              <folding>
+                <element signature="e#0#1265#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/CollectionUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>package</find>
+      <find>AFKKickTask</find>
+      <find>HTMLUtils</find>
+      <find>The original file can be found here: TODO</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>The original file can be found here: https://github.com/Avicus/AvicusNetwork</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/Java/src</dir>
+      <dir>$PROJECT_DIR$/Java/src/bukkit/action</dir>
+      <dir>$PROJECT_DIR$/Java</dir>
+      <dir>$PROJECT_DIR$/Java/src/misc-utils/xml</dir>
+      <dir>$PROJECT_DIR$/Java/src/teamspeak</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Java/src/bukkit/action/base/Action.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/chat/filter/ChatFilter.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/chat/filter/IPFilter.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/chat/filter/WordFilter.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/command/DevCommands.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/cooldown/CooldownTracker.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/cooldown/ObjectCooledEvent.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/executor/ExecutionDispatch.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/executor/ExecutionListenerRegistration.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/executor/ExecutorCollection.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/freeze/FreezeModule.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/misc/AFKKickTask.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/misc/Friday13.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/misc/MatchFactory.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/misc/ScopableItemStack.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/misc/TabListComponent.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/misc/XPLeaderboardTask.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/populators/OnlyCavesOrePopulator.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/docs/GenerationUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/docs/HTMLUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/tag/CombatLoggerState.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/tag/LoggerNPCManager.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/tag/PlayerState.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/DeathMessage.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/FakeBlockState.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/FireworkSpawnTask.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/FriendlyInvisibilityTask.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/GeneratorSettingsBuilder.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/ItemStackBuilder.java" />
+        <option value="$PROJECT_DIR$/Java/src/bukkit/util/PlayerUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/bungee/StatusCheckTask.java" />
+        <option value="$PROJECT_DIR$/Java/src/discord/utils/ChannelUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/discord/utils/UserUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/discord/utils/DiscordLoggingUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/discord/utils/logging/DiscordExceptionHandler.java" />
+        <option value="$PROJECT_DIR$/Java/src/discord/utils/logging/DiscordLogHandler.java" />
+        <option value="$PROJECT_DIR$/Java/src/external/ComponentClassLoader.java" />
+        <option value="$PROJECT_DIR$/Java/src/external/ComponentDescriptionFile.java" />
+        <option value="$PROJECT_DIR$/Java/src/external/ComponentLoader.java" />
+        <option value="$PROJECT_DIR$/Java/src/external/ExternalComponent.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/k8s/PodTemplate.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/k8s/ResourceTemplate.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/k8s/ServiceTemplate.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/FileBackedKVSet.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/xml/conditionals/type/ConfigValueConditional.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/CollectionUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/HTMLUtils.java" />
+        <option value="$PROJECT_DIR$/Java/src/misc-utils/TranslationProvider.java" />
+        <option value="$PROJECT_DIR$/Java/src/teamspeak/temp/TemporaryChannels.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="23" />
+    <option name="width" value="1920" />
+    <option name="height" value="970" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="filter" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="misc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="populators" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="tag" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="bungee" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+              <item name="logging" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="external" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="misc-utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="misc-utils" type="462c0819:PsiDirectoryNode" />
+              <item name="k8s" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="teamspeak" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="teamspeak" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code-samples" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Java" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="teamspeak" type="462c0819:PsiDirectoryNode" />
+              <item name="temp" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1579071462397" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Java/src" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9c195aa1-303e-4682-89aa-36a66d88a308" name="Default Changelist" comment="" />
+      <created>1579069863541</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1579069863541</updated>
+      <workItem from="1579069864717" duration="1594000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1594000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1920" height="970" extended-state="6" />
+    <layout>
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="UI Designer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24973376" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Duplicate detector" weight="0.32915717" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Palette" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Maven" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/chat/filter/ChatFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="41" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/sound/SoundContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/sound/SoundGadget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/sound/SoundManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-699">
+          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/misc/AFKKickTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="32" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/docs/HTMLUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#16061#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/generator/ChestGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/generator/ChestRegenerateTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/docs/GenerationUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/populators/OnlyCavesOrePopulator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="8" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/tag/LoggerNPCManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/tag/PlayerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/misc/XPLeaderboardTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="12" lean-forward="true" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/EnderChestStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/DeathMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/FakeBlockState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#4124#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/FriendlyInvisibilityTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="5" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/PersistenceListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-54">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/ItemStackBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/GeneratorSettingsBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="67">
+          <caret line="5" column="49" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/FireworkSpawnTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="2" lean-forward="true" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/polling/DiscussionPollingService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/polling/PollingService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/polling/PrestigeLevelPollingService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/tag/CombatLoggerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="67">
+          <caret line="5" column="33" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/utils/DiscordLoggingUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-338">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/documentation/InfoTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/documentation/SpecInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/external/ModuleSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="20" column="22" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/external/SetClassLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/external/SetLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="251" column="9" lean-forward="true" selection-start-line="251" selection-start-column="9" selection-end-line="251" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/utils/logging/DiscordLogHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-39">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bungee/StatusCheckTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#4768#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/utils/logging/DiscordExceptionHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="6" selection-end-column="2" />
+          <folding>
+            <element signature="e#0#838#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/external/ComponentClassLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#1897#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/external/ComponentDescriptionFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#2438#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/external/ComponentLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+          <folding>
+            <element signature="e#0#9419#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/external/ExternalComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="2" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="2" />
+          <folding>
+            <element signature="e#0#1306#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/utils/ChannelUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="32" lean-forward="true" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/bukkit/util/PlayerUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="26" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/k8s/PodTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/k8s/ResourceTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/k8s/ServiceTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/discord/utils/UserUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="37" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/xml/conditionals/type/ConfigValueConditional.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+          <folding>
+            <element signature="e#0#1265#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/CollectionUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/FileBackedKVSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#4075#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/HTMLUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/Version.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/misc-utils/TranslationProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-84">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Java/src/teamspeak/temp/TemporaryChannels.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2589">
+          <caret line="5" column="27" selection-start-line="5" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
